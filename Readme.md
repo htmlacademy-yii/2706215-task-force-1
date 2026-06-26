@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Александр Глущенко](https://up.htmlacademy.ru/yii-individual/1/user/2706215).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Попов](https://htmlacademy.ru/profile/id1181399).
 
 ---
 
