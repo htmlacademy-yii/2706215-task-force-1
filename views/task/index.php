@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
 <div class="left-column">
     <h3 class="head-main head-task">Новые задания</h3>
 
-    <?php if ($tasks !== []): ?>
+    <?php if (!empty($tasks)): ?>
         <?php foreach ($tasks as $task): ?>
             <div class="task-card">
                 <div class="header-task">

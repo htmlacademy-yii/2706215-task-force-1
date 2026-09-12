@@ -17,4 +17,18 @@ final class CategoryRepository
     {
         return Category::find()->orderBy(['name' => SORT_ASC])->all();
     }
+
+    /**
+     * Returns categories as an ID-to-name map sorted by name.
+     *
+     * @return array<int, string>
+     */
+    public function findAllForSelect(): array
+    {
+        return Category::find()
+            ->select(['name', 'id'])
+            ->orderBy(['name' => SORT_ASC])
+            ->indexBy('id')
+            ->column();
+    }
 }

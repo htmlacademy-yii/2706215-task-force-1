@@ -73,18 +73,25 @@ use yii\helpers\Url;
             <dd><?= Html::encode($task->statusLabel) ?></dd>
         </dl>
     </div>
-    <!-- TODO: Implement attachments -->
-    <div class="right-card white file-card">
-        <h4 class="head-card">Файлы задания</h4>
-        <ul class="enumeration-list">
-            <li class="enumeration-item">
-                <a href="#" class="link link--block link--clip">my_picture.jpg</a>
-                <p class="file-size">356 Кб</p>
-            </li>
-            <li class="enumeration-item">
-                <a href="#" class="link link--block link--clip">information.docx</a>
-                <p class="file-size">12 Кб</p>
-            </li>
-        </ul>
-    </div>
+    <?php if (!empty($task->attachments)): ?>
+        <div class="right-card white file-card">
+            <h4 class="head-card">Файлы задания</h4>
+            <ul class="enumeration-list">
+                <?php foreach ($task->attachments as $attachment): ?>
+                    <li class="enumeration-item">
+                        <?= Html::a(
+                            $attachment->original_name,
+                            ['/task/download', 'id' => $attachment->id],
+                            ['class' => 'link link--block link--clip']
+                        ) ?>
+                        <?php if ($attachment->size_bytes !== null): ?>
+                            <p class="file-size">
+                                <?= Yii::$app->formatter->asShortSize($attachment->size_bytes) ?>
+                            </p>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
 </div>

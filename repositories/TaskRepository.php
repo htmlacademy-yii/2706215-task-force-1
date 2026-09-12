@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\repositories;
 
 use app\dto\TaskFilterDto;
+use app\models\Attachment;
 use app\models\Task;
 use Sanweb\Taskforce\enum\TaskStatus;
 use yii\db\ActiveQuery;
@@ -56,11 +57,20 @@ final class TaskRepository
         return Task::find()
             ->where(['task.id' => $id])
             ->with([
+                'attachments',
                 'category',
                 'bids.user.executorStats',
                 'bids.user.receivedReviews',
             ])
             ->one();
+    }
+
+    /**
+     * Finds a task attachment by ID.
+     */
+    public function findAttachmentById(int $id): ?Attachment
+    {
+        return Attachment::findOne($id);
     }
 
     /**

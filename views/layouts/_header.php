@@ -51,7 +51,7 @@ $items = [
                     <a href="#" class="link link--nav" >Мои задания</a>
                 </li>
                 <li class="list-item">
-                    <a href="#" class="link link--nav" >Создать задание</a>
+                    <a href="<?= Url::to(['/task/create']) ?>" class="link link--nav" >Создать задание</a>
                 </li>
                 <li class="list-item">
                     <a href="#" class="link link--nav" >Настройки</a>

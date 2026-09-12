@@ -7,8 +7,14 @@ namespace app\requests;
 use app\dto\TaskFilterDto;
 use yii\base\Model;
 
+/**
+ * Validates and normalizes task list filter input.
+ */
 class TaskFilterRequest extends Model
 {
+    /**
+     * Supported relative publication periods and their labels.
+     */
     public const array PERIODS = [
         '-1 hour' => 'За час',
         '-12 hours' => 'За 12 часов',

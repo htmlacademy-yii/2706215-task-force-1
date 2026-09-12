@@ -7,6 +7,9 @@ namespace app\requests;
 use app\dto\UserLoginDto;
 use yii\base\Model;
 
+/**
+ * Validates credentials submitted through the login form.
+ */
 class UserLoginRequest extends Model
 {
     public string $email = '';

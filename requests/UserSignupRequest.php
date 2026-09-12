@@ -9,6 +9,9 @@ use app\models\City;
 use app\models\User;
 use yii\base\Model;
 
+/**
+ * Validates input submitted through the user registration form.
+ */
 class UserSignupRequest extends Model
 {
     public string $name = '';

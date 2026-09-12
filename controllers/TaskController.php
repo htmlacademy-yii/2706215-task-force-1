@@ -7,10 +7,16 @@ namespace app\controllers;
 use app\dto\TaskFilterDto;
 use app\repositories\CategoryRepository;
 use app\repositories\TaskRepository;
+use app\requests\TaskCreateRequest;
 use app\requests\TaskFilterRequest;
+use app\services\FileStorage;
+use app\services\TaskService;
+use Sanweb\Taskforce\exception\TaskCreateException;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
+use yii\web\UploadedFile;
 
 class TaskController extends AuthorizedController
 {
@@ -22,6 +28,8 @@ class TaskController extends AuthorizedController
         mixed $module,
         private readonly TaskRepository $taskRepository,
         private readonly CategoryRepository $categoryRepository,
+        private readonly TaskService $taskService,
+        private readonly FileStorage $fileStorage,
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
@@ -72,6 +80,63 @@ class TaskController extends AuthorizedController
 
         return $this->render('view', [
             'task' => $task,
+        ]);
+    }
+
+    /**
+     * Downloads a task attachment.
+     * Any authenticated user can download an attachment due to AuthorizedController.
+     *
+     * @throws NotFoundHttpException
+     */
+    public function actionDownload(int $id): Response
+    {
+        $attachment = $this->taskRepository->findAttachmentById($id);
+
+        if ($attachment === null) {
+            throw new NotFoundHttpException('Файл не найден.');
+        }
+
+        $path = $this->fileStorage->find($attachment->file_path);
+
+        if ($path === null) {
+            throw new NotFoundHttpException('Файл не найден.');
+        }
+
+        $options = $attachment->mime_type === null
+            ? []
+            : ['mimeType' => $attachment->mime_type];
+
+        return $this->response->sendFile($path, $attachment->original_name, $options);
+    }
+
+    /**
+     * Creates a new task and redirects to its details page.
+     *
+     * @throws TaskCreateException
+     */
+    public function actionCreate(): Response|string
+    {
+        $form = new TaskCreateRequest();
+
+        if ($this->request->isPost) {
+            $form->load($this->request->post());
+            $form->files = UploadedFile::getInstances($form, 'files');
+
+            if ($form->validate()) {
+                $task = $this->taskService->create(
+                    $form->toDto(),
+                    (int) Yii::$app->user->id,
+                    $form->files,
+                );
+
+                return $this->redirect(['task/view', 'id' => $task->id]);
+            }
+        }
+
+        return $this->render('create', [
+            'model' => $form,
+            'categories' => $this->categoryRepository->findAllForSelect(),
         ]);
     }
 }
