@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /**
- * @var \app\requests\TaskCreateRequest $model
+ * @var \app\forms\TaskCreateForm $model
  * @var array<int, string> $categories
  */
 

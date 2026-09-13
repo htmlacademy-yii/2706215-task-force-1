@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace app\controllers;
 
 use app\dto\TaskFilterDto;
+use app\forms\TaskCreateForm;
+use app\forms\TaskFilterForm;
 use app\repositories\CategoryRepository;
 use app\repositories\TaskRepository;
-use app\requests\TaskCreateRequest;
-use app\requests\TaskFilterRequest;
 use app\services\FileStorage;
 use app\services\TaskService;
 use Sanweb\Taskforce\exception\TaskCreateException;
@@ -40,7 +40,7 @@ class TaskController extends AuthorizedController
      */
     public function actionIndex(): string
     {
-        $filterForm = new TaskFilterRequest();
+        $filterForm = new TaskFilterForm();
         $filterForm->load(Yii::$app->request->queryParams);
 
         $filter = new TaskFilterDto();
@@ -117,7 +117,7 @@ class TaskController extends AuthorizedController
      */
     public function actionCreate(): Response|string
     {
-        $form = new TaskCreateRequest();
+        $form = new TaskCreateForm();
 
         if ($this->request->isPost) {
             $form->load($this->request->post());

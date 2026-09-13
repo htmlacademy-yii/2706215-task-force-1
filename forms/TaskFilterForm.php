@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\requests;
+namespace app\forms;
 
 use app\dto\TaskFilterDto;
 use yii\base\Model;
@@ -10,7 +10,7 @@ use yii\base\Model;
 /**
  * Validates and normalizes task list filter input.
  */
-class TaskFilterRequest extends Model
+class TaskFilterForm extends Model
 {
     /**
      * Supported relative publication periods and their labels.

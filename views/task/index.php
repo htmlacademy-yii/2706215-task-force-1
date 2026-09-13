@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
 /** @var \app\models\Task[] $tasks */
 /** @var \app\models\Category[] $categories */
-/** @var \app\requests\TaskFilterRequest $filterForm */
+/** @var \app\forms\TaskFilterForm $filterForm */
 /** @var \yii\data\Pagination $pagination */
 ?>
 

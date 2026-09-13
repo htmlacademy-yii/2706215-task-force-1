@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
+use app\forms\UserSignupForm;
 use app\repositories\CityRepository;
 use app\repositories\TaskRepository;
 use app\repositories\UserRepository;
-use app\requests\UserSignupRequest;
 use app\services\UserService;
 use Sanweb\Taskforce\exception\UserSignupException;
 use Yii;
@@ -89,7 +89,7 @@ class UserController extends AuthorizedController
      */
     public function actionSignup(): Response|string
     {
-        $signupForm = new UserSignupRequest();
+        $signupForm = new UserSignupForm();
 
         if ($signupForm->load($this->request->post()) && $signupForm->validate()) {
             $user = $this->userService->signup($signupForm->toDto());
