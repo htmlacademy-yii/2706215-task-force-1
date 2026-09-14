@@ -52,17 +52,32 @@ final class TaskRepository
     /**
      * Finds a task with the data required by the task details page.
      */
-    public function findDetailsById(int $id): ?Task
+    public function findDetailsById(int $id, int $viewerId): ?Task
     {
-        return Task::find()
+        $task = Task::find()
             ->where(['task.id' => $id])
             ->with([
                 'attachments',
                 'category',
-                'bids.user.executorStats',
-                'bids.user.receivedReviews',
             ])
             ->one();
+
+        if ($task === null) {
+            return null;
+        }
+
+        $bidsQuery = $task->getBids()->with([
+            'user.executorStats',
+            'user.receivedReviews',
+        ]);
+
+        if ($task->customer_id !== $viewerId) {
+            $bidsQuery->andWhere(['bid.user_id' => $viewerId]);
+        }
+
+        $task->populateRelation('bids', $bidsQuery->all());
+
+        return $task;
     }
 
     /**

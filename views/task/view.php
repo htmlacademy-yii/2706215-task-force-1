@@ -7,6 +7,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 /** @var \app\models\Task $task */
+/** @var bool $isCustomer */
 ?>
 
 <div class="left-column">
@@ -25,39 +26,44 @@ use yii\helpers\Url;
         <p class="map-address">Новый арбат, 23, к. 1</p>
     </div>
 
-    <h4 class="head-regular">Отклики на задание</h4>
+    <?php if (!empty($task->bids)): ?>
+        <h4 class="head-regular">Отклики на задание</h4>
 
-    <?php foreach ($task->bids as $bid): ?>
-        <div class="response-card">
-            <img class="customer-photo" src="<?= $bid->user->avatar ?? '/img/avatars/default.png' ?>" width="146" height="156" alt="Фото исполнителя">
-            <div class="feedback-wrapper">
-                <a href="<?= Url::to(['user/view', 'id' => $bid->user_id]) ?>" class="link link--block link--big"><?= Html::encode($bid->user->name) ?></a>
-                <div class="response-wrapper">
-                    <?= RatingWidget::widget([
-                        'value' => $bid->user->executorStats->avg_score ?? 0,
-                        'size' => RatingWidget::SIZE_SMALL,
-                    ]) ?>
-                    <p class="reviews">
-                        <?= Yii::t(
-                            'app',
-                            '{n, plural, one{# отзыв} few{# отзыва} many{# отзывов} other{# отзывов}}',
-                            ['n' => count($bid->user->receivedReviews)],
-                        ) ?>
-                    </p>
+        <?php foreach ($task->bids as $bid): ?>
+            <div class="response-card">
+                <img class="customer-photo" src="<?= $bid->user->avatar ?? '/img/avatars/default.png' ?>" width="146" height="156" alt="Фото исполнителя">
+                <div class="feedback-wrapper">
+                    <a href="<?= Url::to(['user/view', 'id' => $bid->user_id]) ?>" class="link link--block link--big"><?= Html::encode($bid->user->name) ?></a>
+                    <div class="response-wrapper">
+                        <?= RatingWidget::widget([
+                            'value' => $bid->user->executorStats->avg_score ?? 0,
+                            'size' => RatingWidget::SIZE_SMALL,
+                        ]) ?>
+                        <p class="reviews">
+                            <?= Yii::t(
+                                'app',
+                                '{n, plural, one{# отзыв} few{# отзыва} many{# отзывов} other{# отзывов}}',
+                                ['n' => count($bid->user->receivedReviews)],
+                            ) ?>
+                        </p>
+                    </div>
+                    <p class="response-message"><?= Html::encode($bid->comment) ?></p>
                 </div>
-                <p class="response-message"><?= Html::encode($bid->comment) ?></p>
+                <div class="feedback-wrapper">
+                    <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($bid->created_at) ?></span></p>
+                    <p class="price price--small"><?= Yii::$app->formatter->asCurrency($bid->price) ?></p>
+                </div>
+                <?php if ($isCustomer): ?>
+                    <div class="button-popup">
+                        <!-- TODO: Implement action buttons -->
+                        <a href="#" class="button button--blue button--small">Принять</a>
+                        <a href="#" class="button button--orange button--small">Отказать</a>
+                    </div>
+                <?php endif; ?>
             </div>
-            <div class="feedback-wrapper">
-                <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($bid->created_at) ?></span></p>
-                <p class="price price--small"><?= Yii::$app->formatter->asCurrency($bid->price) ?></p>
-            </div>
-            <div class="button-popup">
-                <!-- TODO: Implement action buttons -->
-                <a href="#" class="button button--blue button--small">Принять</a>
-                <a href="#" class="button button--orange button--small">Отказать</a>
-            </div>
-        </div>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
+
+    <?php endif; ?>
 </div>
 <div class="right-column">
     <div class="right-card black info-card">

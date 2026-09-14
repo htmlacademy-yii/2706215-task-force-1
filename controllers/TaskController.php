@@ -73,7 +73,8 @@ class TaskController extends AuthorizedController
      */
     public function actionView(int $id): string
     {
-        $task = $this->taskRepository->findDetailsById($id);
+        $currentUserId = (int) Yii::$app->user->id;
+        $task = $this->taskRepository->findDetailsById($id, $currentUserId);
 
         if ($task === null) {
             throw new NotFoundHttpException('Задание не найдено.');
@@ -81,6 +82,7 @@ class TaskController extends AuthorizedController
 
         return $this->render('view', [
             'task' => $task,
+            'isCustomer' => $task->customer_id === $currentUserId,
         ]);
     }
 
