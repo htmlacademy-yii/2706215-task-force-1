@@ -7,6 +7,7 @@ namespace app\services;
 use app\dto\TaskCreateDto;
 use app\models\Attachment;
 use app\models\Task;
+use Sanweb\Taskforce\enum\StorageArea;
 use Sanweb\Taskforce\exception\TaskCreateException;
 use Throwable;
 
@@ -58,7 +59,10 @@ final class TaskService
             }
 
             if ($attachmentDirectory !== null) {
-                $this->fileStorage->removeDirectory($attachmentDirectory);
+                $this->fileStorage->removeDirectory(
+                    StorageArea::TaskAttachments,
+                    $attachmentDirectory,
+                );
             }
 
             if ($exception instanceof TaskCreateException) {
@@ -75,7 +79,11 @@ final class TaskService
     private function saveAttachments(Task $task, array $files): void
     {
         foreach ($files as $file) {
-            $storedFile = $this->fileStorage->store($file, (string) $task->id);
+            $storedFile = $this->fileStorage->store(
+                $file,
+                StorageArea::TaskAttachments,
+                (string) $task->id,
+            );
 
             $attachment = new Attachment();
             $attachment->task_id = $task->id;

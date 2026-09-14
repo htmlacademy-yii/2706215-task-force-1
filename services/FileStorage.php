@@ -5,32 +5,37 @@ declare(strict_types=1);
 namespace app\services;
 
 use app\dto\StoredFileDto;
+use Sanweb\Taskforce\enum\StorageArea;
 use Sanweb\Taskforce\exception\FileException;
 use Yii;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
 /**
- * Stores files using random names and MIME-based extensions
- * in entity-based directories.
- *
- * Unlike the original assignment requirements, files are intentionally stored
- * outside the public web directory to prevent direct access. They must be
- * served through a controller after the required access checks.
+ * Stores files under the configured root directory using random names
+ * and MIME-based extensions.
  */
 final class FileStorage
 {
-    private const STORAGE_DIRECTORY_ALIAS = '@app/storage/task-attachments/';
+    /**
+     * @param array<string, string> $rootAliases
+     */
+    public function __construct(
+        private readonly array $rootAliases,
+    ) {}
 
     /**
      * Saves an uploaded file and returns its metadata.
      *
      * @throws FileException
      */
-    public function store(UploadedFile $file, string $directory): StoredFileDto
-    {
+    public function store(
+        UploadedFile $file,
+        StorageArea $storageArea,
+        string $directory,
+    ): StoredFileDto {
         $relativeDirectory = trim($directory, '/');
-        $absoluteDirectory = $this->getAbsolutePath($relativeDirectory);
+        $absoluteDirectory = $this->getAbsolutePath($storageArea, $relativeDirectory);
 
         $this->ensureDirectoryExists($absoluteDirectory);
 
@@ -38,7 +43,7 @@ final class FileStorage
         $storedName = $this->buildStoredName($mimeType);
 
         $relativePath = $relativeDirectory . '/' . $storedName;
-        $absolutePath = $this->getAbsolutePath($relativePath);
+        $absolutePath = $this->getAbsolutePath($storageArea, $relativePath);
 
         $this->saveFile($file, $absolutePath);
 
@@ -52,10 +57,12 @@ final class FileStorage
 
     /**
      * Removes a directory with all stored files.
+     *
+     * @throws FileException
      */
-    public function removeDirectory(string $directory): void
+    public function removeDirectory(StorageArea $storageArea, string $directory): void
     {
-        $path = $this->getAbsolutePath(trim($directory, '/'));
+        $path = $this->getAbsolutePath($storageArea, trim($directory, '/'));
 
         if (is_dir($path)) {
             FileHelper::removeDirectory($path);
@@ -64,10 +71,12 @@ final class FileStorage
 
     /**
      * Returns an existing stored file path.
+     *
+     * @throws FileException
      */
-    public function find(string $filePath): ?string
+    public function find(StorageArea $storageArea, string $filePath): ?string
     {
-        $path = $this->getAbsolutePath($filePath);
+        $path = $this->getAbsolutePath($storageArea, $filePath);
 
         return is_file($path) ? $path : null;
     }
@@ -75,9 +84,27 @@ final class FileStorage
     /**
      * Resolves a relative path inside the file storage.
      */
-    private function getAbsolutePath(string $relativePath): string
+    private function getAbsolutePath(StorageArea $storageArea, string $relativePath): string
     {
-        return Yii::getAlias(self::STORAGE_DIRECTORY_ALIAS) . $relativePath;
+        $rootAlias = $this->rootAliases[$storageArea->value] ?? null;
+
+        if (!is_string($rootAlias) || $rootAlias === '') {
+            throw new FileException('Хранилище файлов не настроено.');
+        }
+
+        $rootPath = FileHelper::normalizePath(Yii::getAlias($rootAlias));
+        $absolutePath = FileHelper::normalizePath(
+            $rootPath . DIRECTORY_SEPARATOR . $relativePath,
+        );
+
+        if (
+            $absolutePath === $rootPath
+            || !str_starts_with($absolutePath, $rootPath . DIRECTORY_SEPARATOR)
+        ) {
+            throw new FileException('Путь выходит за пределы файлового хранилища.');
+        }
+
+        return $absolutePath;
     }
 
     private function ensureDirectoryExists(string $directory): void

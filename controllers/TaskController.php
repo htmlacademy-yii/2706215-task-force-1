@@ -11,6 +11,7 @@ use app\repositories\CategoryRepository;
 use app\repositories\TaskRepository;
 use app\services\FileStorage;
 use app\services\TaskService;
+use Sanweb\Taskforce\enum\StorageArea;
 use Sanweb\Taskforce\exception\TaskCreateException;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -97,7 +98,10 @@ class TaskController extends AuthorizedController
             throw new NotFoundHttpException('Файл не найден.');
         }
 
-        $path = $this->fileStorage->find($attachment->file_path);
+        $path = $this->fileStorage->find(
+            StorageArea::TaskAttachments,
+            $attachment->file_path,
+        );
 
         if ($path === null) {
             throw new NotFoundHttpException('Файл не найден.');
