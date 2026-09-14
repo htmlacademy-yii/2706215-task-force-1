@@ -13,7 +13,7 @@ final readonly class UserLoginDto
      * Initializes user login credentials.
      */
     public function __construct(
-        public string $email = '',
-        public string $password = '',
+        public string $email,
+        public string $password,
     ) {}
 }
