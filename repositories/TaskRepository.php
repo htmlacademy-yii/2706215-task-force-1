@@ -6,6 +6,7 @@ namespace app\repositories;
 
 use app\dto\TaskFilterDto;
 use app\models\Attachment;
+use app\models\Bid;
 use app\models\Task;
 use Sanweb\Taskforce\enum\TaskStatus;
 use yii\db\ActiveQuery;
@@ -86,6 +87,17 @@ final class TaskRepository
     public function findAttachmentById(int $id): ?Attachment
     {
         return Attachment::findOne($id);
+    }
+
+    /**
+     * Finds a bid by ID with its task.
+     */
+    public function findBidById(int $id): ?Bid
+    {
+        return Bid::find()
+            ->where(['bid.id' => $id])
+            ->with('task')
+            ->one();
     }
 
     /**

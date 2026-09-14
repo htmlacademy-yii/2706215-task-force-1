@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use app\widgets\RatingWidget;
+use Sanweb\Taskforce\enum\BidStatus;
+use Sanweb\Taskforce\enum\TaskStatus;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -53,11 +55,20 @@ use yii\helpers\Url;
                     <p class="info-text"><span class="current-time"><?= Yii::$app->formatter->asRelativeTime($bid->created_at) ?></span></p>
                     <p class="price price--small"><?= Yii::$app->formatter->asCurrency($bid->price) ?></p>
                 </div>
-                <?php if ($isCustomer): ?>
+                <?php if (
+                    $isCustomer
+                    && $task->status === TaskStatus::New->value
+                    && $bid->status === BidStatus::New->value
+                ): ?>
                     <div class="button-popup">
-                        <!-- TODO: Implement action buttons -->
-                        <a href="#" class="button button--blue button--small">Принять</a>
-                        <a href="#" class="button button--orange button--small">Отказать</a>
+                        <?= Html::a('Принять', ['task/accept-bid', 'id' => $bid->id], [
+                            'class' => 'button button--blue button--small',
+                            'data-method' => 'post',
+                        ]) ?>
+                        <?= Html::a('Отказать', ['task/reject-bid', 'id' => $bid->id], [
+                            'class' => 'button button--orange button--small',
+                            'data-method' => 'post',
+                        ]) ?>
                     </div>
                 <?php endif; ?>
             </div>

@@ -6,8 +6,12 @@ namespace app\services;
 
 use app\dto\TaskCreateDto;
 use app\models\Attachment;
+use app\models\Bid;
 use app\models\Task;
+use Sanweb\Taskforce\enum\BidStatus;
 use Sanweb\Taskforce\enum\StorageArea;
+use Sanweb\Taskforce\enum\TaskStatus;
+use Sanweb\Taskforce\exception\TaskActionException;
 use Sanweb\Taskforce\exception\TaskCreateException;
 use Throwable;
 
@@ -74,6 +78,56 @@ final class TaskService
     }
 
     /**
+     * Accepts a bid and assigns its author as the task executor.
+     *
+     * @throws TaskActionException
+     */
+    public function acceptBid(Bid $bid, int $currentUserId): void
+    {
+        $task = $bid->task;
+        $this->ensureBidCanBeChanged($bid, $task, $currentUserId);
+
+        $transaction = Task::getDb()->beginTransaction();
+
+        try {
+            $task->executor_id = $bid->user_id;
+            $task->status = TaskStatus::InProgress->value;
+            $bid->status = BidStatus::Accepted->value;
+
+            if (!$task->save() || !$bid->save()) {
+                throw new TaskActionException('Не удалось принять отклик.');
+            }
+
+            $transaction->commit();
+        } catch (Throwable $exception) {
+            if ($transaction->isActive) {
+                $transaction->rollBack();
+            }
+
+            if ($exception instanceof TaskActionException) {
+                throw $exception;
+            }
+
+            throw new TaskActionException('Не удалось принять отклик.', 0, $exception);
+        }
+    }
+
+    /**
+     * Rejects a bid for the task.
+     *
+     * @throws TaskActionException
+     */
+    public function rejectBid(Bid $bid, int $currentUserId): void
+    {
+        $this->ensureBidCanBeChanged($bid, $bid->task, $currentUserId);
+        $bid->status = BidStatus::Rejected->value;
+
+        if (!$bid->save()) {
+            throw new TaskActionException('Не удалось отклонить отклик.');
+        }
+    }
+
+    /**
      * Saves task files and their metadata.
      */
     private function saveAttachments(Task $task, array $files): void
@@ -95,6 +149,22 @@ final class TaskService
             if (!$attachment->save()) {
                 throw new TaskCreateException('Не удалось сохранить данные файла задания.');
             }
+        }
+    }
+
+    /**
+     * Ensures that the customer may change the bid in the current task state.
+     *
+     * @throws TaskActionException
+     */
+    private function ensureBidCanBeChanged(Bid $bid, Task $task, int $currentUserId): void
+    {
+        if ($task->customer_id !== $currentUserId) {
+            throw new TaskActionException('Действие доступно только автору задания.');
+        }
+
+        if ($task->status !== TaskStatus::New->value || $bid->status !== BidStatus::New->value) {
+            throw new TaskActionException('Действие недоступно в текущем статусе.');
         }
     }
 }

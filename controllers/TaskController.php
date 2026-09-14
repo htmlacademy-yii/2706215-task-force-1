@@ -12,9 +12,12 @@ use app\repositories\TaskRepository;
 use app\services\FileStorage;
 use app\services\TaskService;
 use Sanweb\Taskforce\enum\StorageArea;
+use Sanweb\Taskforce\exception\TaskActionException;
 use Sanweb\Taskforce\exception\TaskCreateException;
 use Yii;
 use yii\data\ActiveDataProvider;
+use yii\filters\VerbFilter;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
@@ -34,6 +37,23 @@ class TaskController extends AuthorizedController
         array $config = []
     ) {
         parent::__construct($id, $module, $config);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors(): array
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['verbs'] = [
+            'class' => VerbFilter::class,
+            'actions' => [
+                'accept-bid' => ['post'],
+                'reject-bid' => ['post'],
+            ],
+        ];
+
+        return $behaviors;
     }
 
     /**
@@ -144,5 +164,51 @@ class TaskController extends AuthorizedController
             'model' => $form,
             'categories' => $this->categoryRepository->findAllForSelect(),
         ]);
+    }
+
+    /**
+     * Accepts a bid and redirects to its task.
+     *
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionAcceptBid(int $id): Response
+    {
+        $bid = $this->taskRepository->findBidById($id);
+
+        if ($bid === null) {
+            throw new NotFoundHttpException('Отклик не найден.');
+        }
+
+        try {
+            $this->taskService->acceptBid($bid, (int) Yii::$app->user->id);
+        } catch (TaskActionException $exception) {
+            throw new ForbiddenHttpException($exception->getMessage(), 0, $exception);
+        }
+
+        return $this->redirect(['task/view', 'id' => $bid->task_id]);
+    }
+
+    /**
+     * Rejects a bid and redirects to its task.
+     *
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionRejectBid(int $id): Response
+    {
+        $bid = $this->taskRepository->findBidById($id);
+
+        if ($bid === null) {
+            throw new NotFoundHttpException('Отклик не найден.');
+        }
+
+        try {
+            $this->taskService->rejectBid($bid, (int) Yii::$app->user->id);
+        } catch (TaskActionException $exception) {
+            throw new ForbiddenHttpException($exception->getMessage(), 0, $exception);
+        }
+
+        return $this->redirect(['task/view', 'id' => $bid->task_id]);
     }
 }
