@@ -51,6 +51,8 @@ final class TaskService
 
             return $task;
         } catch (Throwable $exception) {
+            // Keep task creation atomic: if any attachment fails, roll back
+            // the database changes and remove all files already saved for the task.
             if ($transaction->isActive) {
                 $transaction->rollBack();
             }

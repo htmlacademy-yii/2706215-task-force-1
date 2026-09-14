@@ -6,12 +6,21 @@ namespace app\services;
 
 use app\dto\StoredFileDto;
 use Sanweb\Taskforce\exception\FileException;
+use Yii;
 use yii\helpers\FileHelper;
 use yii\web\UploadedFile;
 
+/**
+ * Stores files using random names and MIME-based extensions
+ * in entity-based directories.
+ *
+ * Unlike the original assignment requirements, files are intentionally stored
+ * outside the public web directory to prevent direct access. They must be
+ * served through a controller after the required access checks.
+ */
 final class FileStorage
 {
-    private const STORAGE_DIRECTORY = '/storage/task-attachments/';
+    private const STORAGE_DIRECTORY_ALIAS = '@app/storage/task-attachments/';
 
     /**
      * Saves an uploaded file and returns its metadata.
@@ -23,27 +32,20 @@ final class FileStorage
         $relativeDirectory = trim($directory, '/');
         $absoluteDirectory = $this->getAbsolutePath($relativeDirectory);
 
-        if (!FileHelper::createDirectory($absoluteDirectory)) {
-            throw new FileException('Не удалось создать каталог для файла.');
-        }
+        $this->ensureDirectoryExists($absoluteDirectory);
 
-        $storedName = hash_file('sha256', $file->tempName);
-
-        if ($storedName === false) {
-            throw new FileException('Не удалось вычислить хеш файла.');
-        }
+        $mimeType = $this->detectMimeType($file);
+        $storedName = $this->buildStoredName($mimeType);
 
         $relativePath = $relativeDirectory . '/' . $storedName;
         $absolutePath = $this->getAbsolutePath($relativePath);
 
-        if (!is_file($absolutePath) && !$file->saveAs($absolutePath)) {
-            throw new FileException('Не удалось сохранить файл.');
-        }
+        $this->saveFile($file, $absolutePath);
 
         return new StoredFileDto(
             filePath: $relativePath,
             originalName: basename(str_replace('\\', '/', $file->name)),
-            mimeType: FileHelper::getMimeType($absolutePath),
+            mimeType: $mimeType,
             sizeBytes: $file->size,
         );
     }
@@ -75,6 +77,41 @@ final class FileStorage
      */
     private function getAbsolutePath(string $relativePath): string
     {
-        return dirname(__DIR__) . self::STORAGE_DIRECTORY . $relativePath;
+        return Yii::getAlias(self::STORAGE_DIRECTORY_ALIAS) . $relativePath;
+    }
+
+    private function ensureDirectoryExists(string $directory): void
+    {
+        if (!FileHelper::createDirectory($directory)) {
+            throw new FileException('Не удалось создать каталог для файла.');
+        }
+    }
+
+    private function detectMimeType(UploadedFile $file): string
+    {
+        $mimeType = FileHelper::getMimeType($file->tempName);
+
+        if ($mimeType === null) {
+            throw new FileException('Не удалось определить MIME-тип файла.');
+        }
+
+        return $mimeType;
+    }
+
+    private function buildStoredName(string $mimeType): string
+    {
+        $name = bin2hex(random_bytes(16));
+        $extension = FileHelper::getExtensionsByMimeType($mimeType)[0] ?? null;
+
+        return $extension !== null
+            ? $name . '.' . $extension
+            : $name;
+    }
+
+    private function saveFile(UploadedFile $file, string $path): void
+    {
+        if (!$file->saveAs($path)) {
+            throw new FileException('Не удалось сохранить файл.');
+        }
     }
 }
