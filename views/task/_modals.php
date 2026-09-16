@@ -8,12 +8,14 @@ use app\widgets\RatingInputWidget;
 use app\widgets\RatingWidget;
 use Sanweb\Taskforce\enum\TaskAction;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var \app\models\Task $task */
 /** @var list<TaskAction> $availableActions */
 /** @var BidCreateForm $bidForm */
 /** @var TaskCompleteForm $completeForm */
+/** @var string|null $activeModal */
 ?>
 
 <?php if (in_array(TaskAction::Refuse, $availableActions, true)): ?>
@@ -37,7 +39,7 @@ use yii\helpers\Html;
 <?php endif; ?>
 
 <?php if (in_array(TaskAction::Complete, $availableActions, true)): ?>
-    <section class="pop-up pop-up--completion pop-up--close">
+    <section class="pop-up pop-up--completion <?= $activeModal === 'completion' ? 'pop-up--open' : 'pop-up--close' ?>">
         <div class="pop-up--wrapper">
             <h4>Завершение задания</h4>
             <p class="pop-up-text">
@@ -45,19 +47,31 @@ use yii\helpers\Html;
                 Пожалуйста, оставьте отзыв об исполнителе и отметьте отдельно, если возникли проблемы.
             </p>
             <div class="completion-form pop-up--form regular-form">
-                <?= Html::beginForm(['task/complete', 'id' => $task->id], 'post') ?>
-                    <div class="form-group">
-                        <?= Html::label('Ваш комментарий', 'completion-comment', ['class' => 'control-label']) ?>
-                        <?= Html::activeTextarea($completeForm, 'comment', ['id' => 'completion-comment']) ?>
-                    </div>
-                    <p class="completion-head control-label">Оценка работы</p>
-                    <?= RatingInputWidget::widget([
-                        'model' => $completeForm,
-                        'attribute' => 'score',
-                        'size' => RatingWidget::SIZE_BIG,
-                    ]) ?>
-                    <?= Html::submitInput('Завершить', ['class' => 'button button--pop-up button--blue']) ?>
-                <?= Html::endForm() ?>
+                <?php $completionActiveForm = ActiveForm::begin([
+                    'id' => 'completion-form',
+                    'action' => ['task/complete', 'id' => $task->id],
+                    'method' => 'post',
+                    'fieldConfig' => [
+                        'options' => ['class' => 'form-group'],
+                        'labelOptions' => ['class' => 'control-label'],
+                        'errorOptions' => ['class' => 'help-block'],
+                    ],
+                ]); ?>
+
+                <?= $completionActiveForm
+                    ->field($completeForm, 'comment')
+                    ->textarea(['id' => 'completion-comment']) ?>
+
+                <p class="completion-head control-label">Оценка работы</p>
+                <?= $completionActiveForm->field($completeForm, 'score', [
+                    'template' => "{input}\n{error}",
+                ])->widget(RatingInputWidget::class, [
+                    'size' => RatingWidget::SIZE_BIG,
+                ]) ?>
+
+                <?= Html::submitInput('Завершить', ['class' => 'button button--pop-up button--blue']) ?>
+
+                <?php ActiveForm::end(); ?>
             </div>
             <div class="button-container">
                 <button class="button--close" type="button">Закрыть окно</button>
@@ -67,7 +81,7 @@ use yii\helpers\Html;
 <?php endif; ?>
 
 <?php if (in_array(TaskAction::Bid, $availableActions, true)): ?>
-    <section class="pop-up pop-up--act_response pop-up--close">
+    <section class="pop-up pop-up--act_response <?= $activeModal === 'act_response' ? 'pop-up--open' : 'pop-up--close' ?>">
         <div class="pop-up--wrapper">
             <h4>Добавление отклика к заданию</h4>
             <p class="pop-up-text">
@@ -75,17 +89,28 @@ use yii\helpers\Html;
                 Пожалуйста, укажите стоимость работы и добавьте комментарий, если необходимо.
             </p>
             <div class="addition-form pop-up--form regular-form">
-                <?= Html::beginForm(['task/create-bid', 'id' => $task->id], 'post') ?>
-                    <div class="form-group">
-                        <?= Html::label('Ваш комментарий', 'addition-comment', ['class' => 'control-label']) ?>
-                        <?= Html::activeTextarea($bidForm, 'comment', ['id' => 'addition-comment']) ?>
-                    </div>
-                    <div class="form-group">
-                        <?= Html::label('Стоимость', 'addition-price', ['class' => 'control-label']) ?>
-                        <?= Html::activeTextInput($bidForm, 'price', ['id' => 'addition-price']) ?>
-                    </div>
-                    <?= Html::submitInput('Откликнуться', ['class' => 'button button--pop-up button--blue']) ?>
-                <?= Html::endForm() ?>
+                <?php $bidActiveForm = ActiveForm::begin([
+                    'id' => 'bid-form',
+                    'action' => ['task/create-bid', 'id' => $task->id],
+                    'method' => 'post',
+                    'fieldConfig' => [
+                        'options' => ['class' => 'form-group'],
+                        'labelOptions' => ['class' => 'control-label'],
+                        'errorOptions' => ['class' => 'help-block'],
+                    ],
+                ]); ?>
+
+                <?= $bidActiveForm
+                    ->field($bidForm, 'comment')
+                    ->textarea(['id' => 'addition-comment']) ?>
+
+                <?= $bidActiveForm
+                    ->field($bidForm, 'price')
+                    ->textInput(['id' => 'addition-price']) ?>
+
+                <?= Html::submitInput('Откликнуться', ['class' => 'button button--pop-up button--blue']) ?>
+
+                <?php ActiveForm::end(); ?>
             </div>
             <div class="button-container">
                 <button class="button--close" type="button">Закрыть окно</button>
@@ -110,4 +135,4 @@ use yii\helpers\Html;
     </section>
 <?php endif; ?>
 
-<div class="overlay"></div>
+<div class="overlay<?= $activeModal !== null ? ' db' : '' ?>"></div>

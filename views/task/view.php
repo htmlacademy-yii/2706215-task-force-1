@@ -18,6 +18,7 @@ use yii\helpers\Url;
 /** @var list<TaskAction> $availableActions */
 /** @var BidCreateForm $bidForm */
 /** @var TaskCompleteForm $completeForm */
+/** @var string|null $activeModal */
 
 TaskViewAsset::register($this);
 ?>
@@ -174,4 +175,5 @@ TaskViewAsset::register($this);
     'availableActions' => $availableActions,
     'bidForm' => $bidForm,
     'completeForm' => $completeForm,
+    'activeModal' => $activeModal,
 ]) ?>
