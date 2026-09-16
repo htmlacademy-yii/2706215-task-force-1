@@ -68,7 +68,10 @@ $this->params['mainClass'] = 'main-content main-content--center';
     <?= $form->field($model, 'files', [
         'template' => '{label}<div class="new-file">{input}</div>{error}',
         'labelOptions' => ['class' => 'form-label'],
-    ])->fileInput(['multiple' => true]) ?>
+    ])->fileInput([
+        'multiple' => true,
+        'value' => '',
+    ]) ?>
 
     <?= Html::submitInput('Опубликовать', ['class' => 'button button--blue']) ?>
 

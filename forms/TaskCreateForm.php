@@ -23,7 +23,7 @@ class TaskCreateForm extends Model
     public string $expireDate = '';
     public string|null $location = null;
     public string|int|null $cityId = null;
-    public ?array $files = null;
+    public array|string|null $files = null;
 
     /**
      * {@inheritdoc}
