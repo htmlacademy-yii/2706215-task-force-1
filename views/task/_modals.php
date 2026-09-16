@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 use app\forms\BidCreateForm;
 use app\forms\TaskCompleteForm;
+use app\widgets\RatingInputWidget;
+use app\widgets\RatingWidget;
 use Sanweb\Taskforce\enum\TaskAction;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var \app\models\Task $task */
@@ -24,12 +25,10 @@ use yii\widgets\ActiveForm;
                 Вы собираетесь отказаться от выполнения этого задания.<br>
                 Это действие плохо скажется на вашем рейтинге и увеличит счетчик проваленных заданий.
             </p>
-            <?php $form = ActiveForm::begin([
-                'action' => ['task/refuse', 'id' => $task->id],
-                'method' => 'post',
-            ]); ?>
-                <?= Html::submitButton('Отказаться', ['class' => 'button button--pop-up button--orange']) ?>
-            <?php ActiveForm::end(); ?>
+            <?= Html::a('Отказаться', ['task/refuse', 'id' => $task->id], [
+                'class' => 'button button--pop-up button--orange',
+                'data-method' => 'post',
+            ]) ?>
             <div class="button-container">
                 <button class="button--close" type="button">Закрыть окно</button>
             </div>
@@ -43,42 +42,22 @@ use yii\widgets\ActiveForm;
             <h4>Завершение задания</h4>
             <p class="pop-up-text">
                 Вы собираетесь отметить это задание как выполненное.
-                Пожалуйста, оставьте отзыв об исполнителе и оцените его работу.
+                Пожалуйста, оставьте отзыв об исполнителе и отметьте отдельно, если возникли проблемы.
             </p>
             <div class="completion-form pop-up--form regular-form">
-                <?php $form = ActiveForm::begin([
-                    'action' => ['task/complete', 'id' => $task->id],
-                    'method' => 'post',
-                ]); ?>
-                    <?= $form->field($completeForm, 'comment')->textarea() ?>
-                    <?php
-                    $selectedScore = (int) $completeForm->score;
-                    $stars = '';
-
-                    for ($score = 1; $score <= 5; $score++) {
-                        $stars .= Html::tag('span', '&nbsp;', [
-                            'class' => $score <= $selectedScore ? 'fill-star' : null,
-                            'role' => 'radio',
-                            'tabindex' => '0',
-                            'data-score' => $score,
-                            'aria-label' => $score . ' из 5',
-                            'aria-checked' => $score === $selectedScore ? 'true' : 'false',
-                        ]);
-                    }
-
-                    $rating = Html::tag('div', $stars, [
-                        'class' => 'stars-rating big active-stars',
-                        'role' => 'radiogroup',
-                        'aria-label' => 'Оценка работы',
-                        'data-rating-input' => Html::getInputId($completeForm, 'score'),
-                    ]);
-                    ?>
-                    <?= $form->field($completeForm, 'score', [
-                        'template' => "{label}\n{$rating}\n{input}\n{error}",
-                        'labelOptions' => ['class' => 'completion-head control-label'],
-                    ])->hiddenInput() ?>
-                    <?= Html::submitButton('Завершить', ['class' => 'button button--pop-up button--blue']) ?>
-                <?php ActiveForm::end(); ?>
+                <?= Html::beginForm(['task/complete', 'id' => $task->id], 'post') ?>
+                    <div class="form-group">
+                        <?= Html::label('Ваш комментарий', 'completion-comment', ['class' => 'control-label']) ?>
+                        <?= Html::activeTextarea($completeForm, 'comment', ['id' => 'completion-comment']) ?>
+                    </div>
+                    <p class="completion-head control-label">Оценка работы</p>
+                    <?= RatingInputWidget::widget([
+                        'model' => $completeForm,
+                        'attribute' => 'score',
+                        'size' => RatingWidget::SIZE_BIG,
+                    ]) ?>
+                    <?= Html::submitInput('Завершить', ['class' => 'button button--pop-up button--blue']) ?>
+                <?= Html::endForm() ?>
             </div>
             <div class="button-container">
                 <button class="button--close" type="button">Закрыть окно</button>
@@ -96,14 +75,17 @@ use yii\widgets\ActiveForm;
                 Пожалуйста, укажите стоимость работы и добавьте комментарий, если необходимо.
             </p>
             <div class="addition-form pop-up--form regular-form">
-                <?php $form = ActiveForm::begin([
-                    'action' => ['task/create-bid', 'id' => $task->id],
-                    'method' => 'post',
-                ]); ?>
-                    <?= $form->field($bidForm, 'comment')->textarea() ?>
-                    <?= $form->field($bidForm, 'price')->textInput() ?>
-                    <?= Html::submitButton('Отправить', ['class' => 'button button--pop-up button--blue']) ?>
-                <?php ActiveForm::end(); ?>
+                <?= Html::beginForm(['task/create-bid', 'id' => $task->id], 'post') ?>
+                    <div class="form-group">
+                        <?= Html::label('Ваш комментарий', 'addition-comment', ['class' => 'control-label']) ?>
+                        <?= Html::activeTextarea($bidForm, 'comment', ['id' => 'addition-comment']) ?>
+                    </div>
+                    <div class="form-group">
+                        <?= Html::label('Стоимость', 'addition-price', ['class' => 'control-label']) ?>
+                        <?= Html::activeTextInput($bidForm, 'price', ['id' => 'addition-price']) ?>
+                    </div>
+                    <?= Html::submitInput('Завершить', ['class' => 'button button--pop-up button--blue']) ?>
+                <?= Html::endForm() ?>
             </div>
             <div class="button-container">
                 <button class="button--close" type="button">Закрыть окно</button>
@@ -117,12 +99,10 @@ use yii\widgets\ActiveForm;
         <div class="pop-up--wrapper">
             <h4>Отмена задания</h4>
             <p class="pop-up-text">Вы действительно хотите отменить это задание?</p>
-            <?php $form = ActiveForm::begin([
-                'action' => ['task/cancel', 'id' => $task->id],
-                'method' => 'post',
-            ]); ?>
-                <?= Html::submitButton('Отменить', ['class' => 'button button--pop-up button--orange']) ?>
-            <?php ActiveForm::end(); ?>
+            <?= Html::a('Отменить', ['task/cancel', 'id' => $task->id], [
+                'class' => 'button button--pop-up button--orange',
+                'data-method' => 'post',
+            ]) ?>
             <div class="button-container">
                 <button class="button--close" type="button">Закрыть окно</button>
             </div>
