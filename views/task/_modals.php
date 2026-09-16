@@ -84,7 +84,7 @@ use yii\helpers\Html;
                         <?= Html::label('Стоимость', 'addition-price', ['class' => 'control-label']) ?>
                         <?= Html::activeTextInput($bidForm, 'price', ['id' => 'addition-price']) ?>
                     </div>
-                    <?= Html::submitInput('Завершить', ['class' => 'button button--pop-up button--blue']) ?>
+                    <?= Html::submitInput('Откликнуться', ['class' => 'button button--pop-up button--blue']) ?>
                 <?= Html::endForm() ?>
             </div>
             <div class="button-container">
