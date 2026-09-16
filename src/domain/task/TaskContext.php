@@ -2,14 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Sanweb\Taskforce\models;
-
-use Sanweb\Taskforce\enum\TaskStatus;
+namespace Sanweb\Taskforce\domain\task;
 
 use InvalidArgumentException;
+use Sanweb\Taskforce\enum\TaskStatus;
 
-final readonly class Task
+/**
+ * Immutable task data used by the task workflow.
+ */
+final readonly class TaskContext
 {
+    /**
+     * Creates a task context.
+     *
+     * @throws InvalidArgumentException
+     */
     public function __construct(
         private TaskStatus $status,
         private int $customerId,
@@ -17,19 +24,22 @@ final readonly class Task
     ) {
         if ($customerId <= 0) {
             throw new InvalidArgumentException(sprintf(
-                'Customer ID must be positive; %d given',
+                'Идентификатор заказчика должен быть положительным числом, передано: %d.',
                 $customerId,
             ));
         }
 
         if ($executorId !== null && $executorId <= 0) {
             throw new InvalidArgumentException(sprintf(
-                'Executor ID must be positive; %d given',
+                'Идентификатор исполнителя должен быть положительным числом, передано: %d.',
                 $executorId,
             ));
         }
     }
 
+    /**
+     * Returns a copy with the specified status.
+     */
     public function withStatus(TaskStatus $status): self
     {
         return new self(
@@ -39,6 +49,9 @@ final readonly class Task
         );
     }
 
+    /**
+     * Returns a copy with the specified executor.
+     */
     public function withExecutor(int $executorId): self
     {
         return new self(
@@ -48,16 +61,25 @@ final readonly class Task
         );
     }
 
+    /**
+     * Returns the current task status.
+     */
     public function getStatus(): TaskStatus
     {
         return $this->status;
     }
 
+    /**
+     * Returns the customer identifier.
+     */
     public function getCustomerId(): int
     {
         return $this->customerId;
     }
 
+    /**
+     * Returns the assigned executor identifier, if any.
+     */
     public function getExecutorId(): ?int
     {
         return $this->executorId;

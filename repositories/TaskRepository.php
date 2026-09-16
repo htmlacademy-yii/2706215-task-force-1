@@ -11,6 +11,9 @@ use app\models\Task;
 use Sanweb\Taskforce\enum\TaskStatus;
 use yii\db\ActiveQuery;
 
+/**
+ * Provides task-related persistence queries.
+ */
 final class TaskRepository
 {
     /**
@@ -90,13 +93,13 @@ final class TaskRepository
     }
 
     /**
-     * Finds a bid by ID with its task.
+     * Finds a bid by ID with its author.
      */
     public function findBidById(int $id): ?Bid
     {
         return Bid::find()
             ->where(['bid.id' => $id])
-            ->with('task')
+            ->with('user')
             ->one();
     }
 

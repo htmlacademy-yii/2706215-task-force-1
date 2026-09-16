@@ -8,21 +8,26 @@ use Sanweb\Taskforce\enum\trait\EnumNames;
 use Sanweb\Taskforce\enum\trait\EnumValues;
 use Sanweb\Taskforce\exception\MissingEnumLabelException;
 
+/**
+ * Identifies an action supported by the task workflow.
+ */
 enum TaskAction: string
 {
-    use EnumNames, EnumValues;
+    use EnumNames;
+    use EnumValues;
 
-    case Create = 'create';
     case Cancel = 'cancel';
     case Bid = 'bid';
     case Assign = 'assign';
     case Complete = 'complete';
     case Refuse = 'refuse';
 
+    /**
+     * Returns the human-readable action label.
+     */
     public function label(): string
     {
         return match ($this) {
-            self::Create => 'Создать',
             self::Cancel => 'Отменить',
             self::Bid => 'Откликнуться',
             self::Assign => 'Назначить',

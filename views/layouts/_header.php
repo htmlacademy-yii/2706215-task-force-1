@@ -35,6 +35,8 @@ $items = [
         'visible' => !Yii::$app->user->isGuest,
     ],
 ];
+$canCreateTask = !Yii::$app->user->isGuest
+    && !(bool) (Yii::$app->user->identity?->is_executor ?? false);
 
 ?>
 <header class="page-header">
@@ -50,9 +52,11 @@ $items = [
                 <li class="list-item">
                     <a href="#" class="link link--nav" >Мои задания</a>
                 </li>
-                <li class="list-item">
-                    <a href="<?= Url::to(['/task/create']) ?>" class="link link--nav" >Создать задание</a>
-                </li>
+                <?php if ($canCreateTask): ?>
+                    <li class="list-item">
+                        <a href="<?= Url::to(['/task/create']) ?>" class="link link--nav">Создать задание</a>
+                    </li>
+                <?php endif; ?>
                 <li class="list-item">
                     <a href="#" class="link link--nav" >Настройки</a>
                 </li>
