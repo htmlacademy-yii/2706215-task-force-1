@@ -14,6 +14,14 @@ $config = [
                 'class' => \app\services\FileStorage::class,
                 '__construct()' => [$params['fileStorage']['roots']],
             ],
+            \app\services\http\HttpClientInterface::class => \app\services\http\GuzzleHttpClient::class,
+            \app\services\geocoding\GeocoderInterface::class => [
+                'class' => \app\services\geocoding\YandexGeocoder::class,
+                '__construct()' => [
+                    \yii\di\Instance::of(\app\services\http\HttpClientInterface::class),
+                    $params['yandex']['geocoderApiKey'],
+                ],
+            ],
             \yii\mail\MailerInterface::class => [
                 'class' => \yii\symfonymailer\Mailer::class,
                 // send all mails to a file by default.

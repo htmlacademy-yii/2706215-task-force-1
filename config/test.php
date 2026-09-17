@@ -23,6 +23,14 @@ return [
                 'class' => \app\services\FileStorage::class,
                 '__construct()' => [$params['fileStorage']['roots']],
             ],
+            \app\services\http\HttpClientInterface::class => \app\services\http\GuzzleHttpClient::class,
+            \app\services\geocoding\GeocoderInterface::class => [
+                'class' => \app\services\geocoding\YandexGeocoder::class,
+                '__construct()' => [
+                    \yii\di\Instance::of(\app\services\http\HttpClientInterface::class),
+                    'test-api-key',
+                ],
+            ],
         ],
     ],
     'components' => [

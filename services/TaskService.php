@@ -11,6 +11,8 @@ use app\models\Review;
 use app\models\Task;
 use app\models\User;
 use app\repositories\TaskRepository;
+use app\services\geocoding\GeocoderInterface;
+use app\services\geocoding\GeocodingException;
 use Sanweb\Taskforce\enum\BidStatus;
 use Sanweb\Taskforce\enum\StorageArea;
 use Sanweb\Taskforce\enum\TaskAction;
@@ -37,7 +39,9 @@ final class TaskService
         private readonly FileStorage $fileStorage,
         private readonly TaskRepository $taskRepository,
         private readonly TaskWorkflow $taskWorkflow,
-    ) {}
+        private readonly GeocoderInterface $geocoder,
+    ) {
+    }
 
     /**
      * Creates a task with files.
@@ -45,10 +49,21 @@ final class TaskService
      * @param list<UploadedFile> $files
      *
      * @throws FileException
+     * @throws GeocodingException
      * @throws TaskCreateException
      */
     public function create(TaskCreateDto $dto, int $customerId, array $files = []): Task
     {
+        $coordinates = null;
+
+        if ($dto->location !== null) {
+            $coordinates = $this->geocoder->geocode($dto->location);
+
+            if ($coordinates === null) {
+                throw new GeocodingException('Не удалось найти указанный адрес.');
+            }
+        }
+
         $transaction = Task::getDb()->beginTransaction();
         $attachmentDirectory = null;
 
@@ -62,6 +77,11 @@ final class TaskService
             $task->expire_date = $dto->expireDate;
             $task->location = $dto->location;
             $task->city_id = $dto->cityId;
+
+            if ($coordinates !== null) {
+                $task->lat = (string) $coordinates->latitude;
+                $task->lng = (string) $coordinates->longitude;
+            }
 
             if (!$task->save()) {
                 throw new TaskCreateException('Не удалось создать задание.');

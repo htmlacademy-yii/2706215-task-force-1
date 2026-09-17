@@ -15,6 +15,7 @@ use app\repositories\CategoryRepository;
 use app\repositories\TaskRepository;
 use app\services\FileStorage;
 use app\services\TaskService;
+use app\services\geocoding\GeocodingException;
 use Sanweb\Taskforce\enum\StorageArea;
 use Sanweb\Taskforce\enum\TaskAction;
 use Sanweb\Taskforce\exception\EntityNotFoundException;
@@ -160,13 +161,21 @@ class TaskController extends AuthorizedController
             $form->files = UploadedFile::getInstances($form, 'files');
 
             if ($form->validate()) {
-                $task = $this->taskService->create(
-                    $form->toDto(),
-                    $user->id,
-                    $form->files,
-                );
+                try {
+                    $task = $this->taskService->create(
+                        $form->toDto(),
+                        $user->id,
+                        $form->files,
+                    );
 
-                return $this->redirect(['task/view', 'id' => $task->id]);
+                    return $this->redirect(['task/view', 'id' => $task->id]);
+                } catch (GeocodingException $exception) {
+                    Yii::warning([
+                        'message' => $exception->getMessage(),
+                        'cause' => $exception->getPrevious()?->getMessage(),
+                    ], __METHOD__);
+                    $form->addError('location', $exception->getMessage());
+                }
             }
         }
 

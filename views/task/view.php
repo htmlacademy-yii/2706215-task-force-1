@@ -6,6 +6,7 @@ use app\assets\TaskViewAsset;
 use app\forms\BidCreateForm;
 use app\forms\TaskCompleteForm;
 use app\widgets\RatingWidget;
+use app\widgets\TaskMapWidget;
 use Sanweb\Taskforce\enum\BidStatus;
 use Sanweb\Taskforce\enum\TaskAction;
 use Sanweb\Taskforce\enum\TaskStatus;
@@ -62,11 +63,11 @@ TaskViewAsset::register($this);
         >Отменить задание</a>
     <?php endif; ?>
 
-    <div class="task-map">
-        <img class="map" src="/img/map.png" width="725" height="346" alt="Новый арбат, 23, к. 1">
-        <p class="map-address town">Москва</p>
-        <p class="map-address">Новый арбат, 23, к. 1</p>
-    </div>
+    <?= TaskMapWidget::widget([
+        'latitude' => $task->lat,
+        'longitude' => $task->lng,
+        'address' => $task->location,
+    ]) ?>
 
     <?php if (!empty($task->bids)): ?>
         <h4 class="head-regular">Отклики на задание</h4>
