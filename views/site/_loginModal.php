@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/** @var app\requests\UserLoginRequest $loginRequest */
+/** @var app\forms\UserLoginForm $loginForm */
 /** @var bool $isOpen */
 
 use yii\helpers\Html;
@@ -26,11 +26,11 @@ use yii\widgets\ActiveForm;
         ],
     ]); ?>
 
-    <?= $form->field($loginRequest, 'email')->input('email', [
+    <?= $form->field($loginForm, 'email')->input('email', [
         'class' => 'enter-form-email input input-middle',
     ]) ?>
 
-    <?= $form->field($loginRequest, 'password')->passwordInput([
+    <?= $form->field($loginForm, 'password')->passwordInput([
         'class' => 'enter-form-email input input-middle',
     ]) ?>
 

@@ -6,10 +6,14 @@ namespace app\repositories;
 
 use app\dto\TaskFilterDto;
 use app\models\Attachment;
+use app\models\Bid;
 use app\models\Task;
 use Sanweb\Taskforce\enum\TaskStatus;
 use yii\db\ActiveQuery;
 
+/**
+ * Provides task-related persistence queries.
+ */
 final class TaskRepository
 {
     /**
@@ -52,17 +56,32 @@ final class TaskRepository
     /**
      * Finds a task with the data required by the task details page.
      */
-    public function findDetailsById(int $id): ?Task
+    public function findDetailsById(int $id, int $viewerId): ?Task
     {
-        return Task::find()
+        $task = Task::find()
             ->where(['task.id' => $id])
             ->with([
                 'attachments',
                 'category',
-                'bids.user.executorStats',
-                'bids.user.receivedReviews',
             ])
             ->one();
+
+        if ($task === null) {
+            return null;
+        }
+
+        $bidsQuery = $task->getBids()->with([
+            'user.executorStats',
+            'user.receivedReviews',
+        ]);
+
+        if ($task->customer_id !== $viewerId) {
+            $bidsQuery->andWhere(['bid.user_id' => $viewerId]);
+        }
+
+        $task->populateRelation('bids', $bidsQuery->all());
+
+        return $task;
     }
 
     /**
@@ -71,6 +90,17 @@ final class TaskRepository
     public function findAttachmentById(int $id): ?Attachment
     {
         return Attachment::findOne($id);
+    }
+
+    /**
+     * Finds a bid by ID with its author.
+     */
+    public function findBidById(int $id): ?Bid
+    {
+        return Bid::find()
+            ->where(['bid.id' => $id])
+            ->with('user')
+            ->one();
     }
 
     /**

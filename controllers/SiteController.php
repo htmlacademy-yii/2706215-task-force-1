@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace app\controllers;
 
 use Yii;
-use app\requests\UserLoginRequest;
+use app\forms\UserLoginForm;
 use app\services\AuthService;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -78,7 +78,7 @@ class SiteController extends Controller
 
         $this->layout = 'landing';
         return $this->render('index', [
-            'loginRequest' => new UserLoginRequest(),
+            'loginForm' => new UserLoginForm(),
             'showLoginModal' => false,
         ]);
     }
@@ -94,23 +94,23 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $loginRequest = new UserLoginRequest();
+        $loginForm = new UserLoginForm();
 
-        if ($loginRequest->load($this->request->post()) && $loginRequest->validate()) {
-            $user = $this->authService->authenticate($loginRequest->toDto());
+        if ($loginForm->load($this->request->post()) && $loginForm->validate()) {
+            $user = $this->authService->authenticate($loginForm->toDto());
 
             if ($user !== null && Yii::$app->user->login($user)) {
                 return $this->goBack();
             }
 
-            $loginRequest->addError('password', 'Неверный email или пароль.');
+            $loginForm->addError('password', 'Неверный email или пароль.');
         }
 
-        $loginRequest->password = '';
+        $loginForm->password = '';
         $this->layout = 'landing';
 
         return $this->render('index', [
-            'loginRequest' => $loginRequest,
+            'loginForm' => $loginForm,
             'showLoginModal' => true,
         ]);
     }

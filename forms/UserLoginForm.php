@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\requests;
+namespace app\forms;
 
 use app\dto\UserLoginDto;
 use yii\base\Model;
@@ -10,7 +10,7 @@ use yii\base\Model;
 /**
  * Validates credentials submitted through the login form.
  */
-class UserLoginRequest extends Model
+class UserLoginForm extends Model
 {
     public string $email = '';
     public string $password = '';

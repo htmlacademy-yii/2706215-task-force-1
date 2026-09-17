@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /** @var yii\web\View $this */
-/** @var app\requests\UserLoginRequest $loginRequest */
+/** @var app\forms\UserLoginForm $loginForm */
 /** @var bool $showLoginModal */
 
 use yii\helpers\Url;
@@ -104,6 +104,6 @@ $this->params['meta_keywords'] = '';
 </div>
 
 <?= $this->render('_loginModal', [
-    'loginRequest' => $loginRequest,
+    'loginForm' => $loginForm,
     'isOpen' => $showLoginModal,
 ]) ?>

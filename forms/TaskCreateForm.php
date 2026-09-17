@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\requests;
+namespace app\forms;
 
 use app\dto\TaskCreateDto;
 use app\models\Category;
@@ -14,7 +14,7 @@ use yii\base\Model;
 /**
  * Validates input submitted through the task creation form.
  */
-class TaskCreateRequest extends Model
+class TaskCreateForm extends Model
 {
     public string|int $categoryId = '';
     public string $title = '';
@@ -23,7 +23,7 @@ class TaskCreateRequest extends Model
     public string $expireDate = '';
     public string|null $location = null;
     public string|int|null $cityId = null;
-    public array $files = [];
+    public array|string|null $files = null;
 
     /**
      * {@inheritdoc}

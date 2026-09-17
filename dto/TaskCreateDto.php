@@ -13,12 +13,12 @@ final readonly class TaskCreateDto
      * Initializes the data required to create a task.
      */
     public function __construct(
-        public int $categoryId = 0,
-        public string $title = '',
-        public string $description = '',
-        public int $budget = 0,
-        public string $expireDate = '',
-        public ?string $location = null,
-        public ?int $cityId = null,
+        public int $categoryId,
+        public string $title,
+        public string $description,
+        public int $budget,
+        public string $expireDate,
+        public ?string $location,
+        public ?int $cityId,
     ) {}
 }

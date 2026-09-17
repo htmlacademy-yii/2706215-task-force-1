@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Sanweb\Taskforce\components\TaskAction;
 
 use Override;
+use Sanweb\Taskforce\domain\task\ActorContext;
+use Sanweb\Taskforce\domain\task\TaskContext;
 use Sanweb\Taskforce\enum\TaskAction;
-use Sanweb\Taskforce\enum\TaskStatus;
-use Sanweb\Taskforce\models\Task;
-use Sanweb\Taskforce\models\User;
 
 /**
  * Completes the task.
@@ -22,17 +21,8 @@ final class CompleteTaskAction extends BaseTaskAction
     }
 
     #[Override]
-    public function getNextStatus(): ?TaskStatus
+    public function isAllowed(TaskContext $task, ActorContext $actor): bool
     {
-        return TaskStatus::Completed;
-    }
-
-    #[Override]
-    public function isAllowed(
-        Task $task,
-        User $user,
-    ): bool {
-        return $task->getCustomerId() === $user->getId();
-            // && $task->getExecutorId() !== null;
+        return $actor->getId() === $task->getCustomerId();
     }
 }

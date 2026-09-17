@@ -17,6 +17,14 @@ return [
         '@npm'   => '@vendor/npm-asset',
     ],
     'language' => 'en-US',
+    'container' => [
+        'singletons' => [
+            \app\services\FileStorage::class => [
+                'class' => \app\services\FileStorage::class,
+                '__construct()' => [$params['fileStorage']['roots']],
+            ],
+        ],
+    ],
     'components' => [
         'db' => $db,
         'mailer' => [

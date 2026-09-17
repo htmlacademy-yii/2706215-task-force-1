@@ -8,6 +8,14 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'app\commands',
+    'container' => [
+        'singletons' => [
+            \app\services\FileStorage::class => [
+                'class' => \app\services\FileStorage::class,
+                '__construct()' => [$params['fileStorage']['roots']],
+            ],
+        ],
+    ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',

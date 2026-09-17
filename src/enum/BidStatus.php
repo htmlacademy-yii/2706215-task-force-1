@@ -13,14 +13,14 @@ enum BidStatus: string
     use EnumNames, EnumValues;
 
     case New = 'new';
-    case Accpeted = 'accepted';
+    case Accepted = 'accepted';
     case Rejected = 'rejected';
 
     public function label(): string
     {
         return match ($this) {
             self::New => 'Новый',
-            self::Accpeted => 'Принят',
+            self::Accepted => 'Принят',
             self::Rejected => 'Отклонен',
             default => throw new MissingEnumLabelException(
                 "Отображаемое название для статуса {$this->value} не задано"

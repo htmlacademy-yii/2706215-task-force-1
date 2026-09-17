@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /**
- * @var \app\requests\UserSignupRequest $model
+ * @var \app\forms\UserSignupForm $model
  * @var array<int, string> $cities
  */
 

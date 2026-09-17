@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\requests;
+namespace app\forms;
 
 use app\dto\UserSignupDto;
 use app\models\City;
@@ -12,7 +12,7 @@ use yii\base\Model;
 /**
  * Validates input submitted through the user registration form.
  */
-class UserSignupRequest extends Model
+class UserSignupForm extends Model
 {
     public string $name = '';
     public string $email = '';

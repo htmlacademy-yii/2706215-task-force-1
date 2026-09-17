@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /**
- * @var \app\requests\TaskCreateRequest $model
+ * @var \app\forms\TaskCreateForm $model
  * @var array<int, string> $categories
  */
 
@@ -68,7 +68,10 @@ $this->params['mainClass'] = 'main-content main-content--center';
     <?= $form->field($model, 'files', [
         'template' => '{label}<div class="new-file">{input}</div>{error}',
         'labelOptions' => ['class' => 'form-label'],
-    ])->fileInput(['multiple' => true]) ?>
+    ])->fileInput([
+        'multiple' => true,
+        'value' => '',
+    ]) ?>
 
     <?= Html::submitInput('Опубликовать', ['class' => 'button button--blue']) ?>
 
