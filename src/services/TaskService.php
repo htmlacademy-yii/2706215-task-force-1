@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace app\services;
+namespace Sanweb\Taskforce\services;
 
-use app\dto\TaskCreateDto;
+use Sanweb\Taskforce\dto\TaskCreateDto;
 use app\models\Attachment;
 use app\models\Bid;
 use app\models\Review;
 use app\models\Task;
 use app\models\User;
-use app\repositories\TaskRepository;
-use app\services\geocoding\GeocoderInterface;
-use app\services\geocoding\GeocodingException;
+use Sanweb\Taskforce\repositories\TaskRepository;
+use Sanweb\Taskforce\services\geocoding\GeocoderInterface;
+use Sanweb\Taskforce\services\geocoding\GeocodingException;
 use Sanweb\Taskforce\enum\BidStatus;
 use Sanweb\Taskforce\enum\StorageArea;
 use Sanweb\Taskforce\enum\TaskAction;

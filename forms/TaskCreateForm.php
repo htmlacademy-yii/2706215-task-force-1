@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace app\forms;
 
-use app\dto\TaskCreateDto;
+use Sanweb\Taskforce\dto\TaskCreateDto;
 use app\models\Category;
 use app\models\City;
 use app\validators\FileNameValidator;

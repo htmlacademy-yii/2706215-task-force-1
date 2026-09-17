@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\services\geocoding;
+namespace Sanweb\Taskforce\services\geocoding;
 
 use Sanweb\Taskforce\exception\AppException;
 

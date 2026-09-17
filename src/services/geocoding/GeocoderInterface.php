@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace app\services\geocoding;
+namespace Sanweb\Taskforce\services\geocoding;
 
-use app\dto\CoordinatesDto;
+use Sanweb\Taskforce\dto\CoordinatesDto;
 
 interface GeocoderInterface
 {

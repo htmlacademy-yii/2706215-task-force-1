@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\services\http;
+namespace Sanweb\Taskforce\services\http;
 
 interface HttpClientInterface
 {

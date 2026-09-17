@@ -10,15 +10,15 @@ $config = [
     'bootstrap' => ['log'],
     'container' => [
         'singletons' => [
-            \app\services\FileStorage::class => [
-                'class' => \app\services\FileStorage::class,
+            \Sanweb\Taskforce\services\FileStorage::class => [
+                'class' => \Sanweb\Taskforce\services\FileStorage::class,
                 '__construct()' => [$params['fileStorage']['roots']],
             ],
-            \app\services\http\HttpClientInterface::class => \app\services\http\GuzzleHttpClient::class,
-            \app\services\geocoding\GeocoderInterface::class => [
-                'class' => \app\services\geocoding\YandexGeocoder::class,
+            \Sanweb\Taskforce\services\http\HttpClientInterface::class => \Sanweb\Taskforce\services\http\GuzzleHttpClient::class,
+            \Sanweb\Taskforce\services\geocoding\GeocoderInterface::class => [
+                'class' => \Sanweb\Taskforce\services\geocoding\YandexGeocoder::class,
                 '__construct()' => [
-                    \yii\di\Instance::of(\app\services\http\HttpClientInterface::class),
+                    \yii\di\Instance::of(\Sanweb\Taskforce\services\http\HttpClientInterface::class),
                     $params['yandex']['geocoderApiKey'],
                 ],
             ],

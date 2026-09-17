@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace app\services\geocoding;
+namespace Sanweb\Taskforce\services\geocoding;
 
-use app\dto\CoordinatesDto;
-use app\services\http\HttpClientException;
-use app\services\http\HttpClientInterface;
+use Sanweb\Taskforce\dto\CoordinatesDto;
+use Sanweb\Taskforce\services\http\HttpClientException;
+use Sanweb\Taskforce\services\http\HttpClientInterface;
 use JsonException;
 
 /**

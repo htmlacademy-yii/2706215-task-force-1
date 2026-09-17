@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\dto;
+namespace Sanweb\Taskforce\dto;
 
 /**
  * Geographic coordinates returned by a geocoder.

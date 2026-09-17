@@ -10,8 +10,8 @@ $config = [
     'controllerNamespace' => 'app\commands',
     'container' => [
         'singletons' => [
-            \app\services\FileStorage::class => [
-                'class' => \app\services\FileStorage::class,
+            \Sanweb\Taskforce\services\FileStorage::class => [
+                'class' => \Sanweb\Taskforce\services\FileStorage::class,
                 '__construct()' => [$params['fileStorage']['roots']],
             ],
         ],

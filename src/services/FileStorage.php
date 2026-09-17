@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace app\services;
+namespace Sanweb\Taskforce\services;
 
-use app\dto\StoredFileDto;
+use Sanweb\Taskforce\dto\StoredFileDto;
 use Sanweb\Taskforce\enum\StorageArea;
 use Sanweb\Taskforce\exception\FileException;
 use Yii;

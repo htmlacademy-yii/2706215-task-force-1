@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace app\forms;
 
-use app\dto\UserLoginDto;
+use Sanweb\Taskforce\dto\UserLoginDto;
 use yii\base\Model;
 
 /**
