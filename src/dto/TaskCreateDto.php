@@ -20,5 +20,7 @@ final readonly class TaskCreateDto
         public string $expireDate,
         public ?string $location,
         public ?int $cityId,
+        public ?float $latitude = null,
+        public ?float $longitude = null,
     ) {}
 }

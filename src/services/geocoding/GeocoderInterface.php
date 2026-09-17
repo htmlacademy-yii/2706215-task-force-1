@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Sanweb\Taskforce\services\geocoding;
 
-use Sanweb\Taskforce\dto\CoordinatesDto;
-
 interface GeocoderInterface
 {
     /**
-     * Finds coordinates for an address.
+     * Returns address variants for an autocomplete field.
+     *
+     * @return list<array{value: string, latitude: float, longitude: float}>
      *
      * @throws GeocodingException
      */
-    public function geocode(string $address): ?CoordinatesDto;
+    public function suggest(string $query): array;
 }

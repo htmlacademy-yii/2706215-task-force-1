@@ -26,9 +26,48 @@ final class YandexGeocoder implements GeocoderInterface
     ) {}
 
     /**
-     * {@inheritdoc}
+     * Returns address variants suitable for an autocomplete field.
+     *
+     * @return list<array{value: string, latitude: float, longitude: float}>
+     *
+     * @throws GeocodingException
      */
-    public function geocode(string $address): ?CoordinatesDto
+    public function suggest(string $query): array
+    {
+        $data = $this->request($query);
+        $members = $data['response']['GeoObjectCollection']['featureMember'] ?? [];
+
+        if (!is_array($members)) {
+            return [];
+        }
+
+        $suggestions = [];
+
+        foreach ($members as $member) {
+            $geoObject = $member['GeoObject'] ?? null;
+            $address = $geoObject['metaDataProperty']['GeocoderMetaData']['text'] ?? null;
+            $coordinates = $this->parsePosition($geoObject['Point']['pos'] ?? null);
+
+            if (!is_string($address) || $address === '' || $coordinates === null) {
+                continue;
+            }
+
+            $suggestions[] = [
+                'value' => $address,
+                'latitude' => $coordinates->latitude,
+                'longitude' => $coordinates->longitude,
+            ];
+        }
+
+        return $suggestions;
+    }
+
+    /**
+     * Sends a request to the geocoder and decodes its response.
+     *
+     * @return array<string, mixed>
+     */
+    private function request(string $query): array
     {
         if ($this->apiKey === '') {
             throw new GeocodingException('Не задан API-ключ геокодера.');
@@ -37,22 +76,20 @@ final class YandexGeocoder implements GeocoderInterface
         try {
             $body = $this->httpClient->get($this->endpoint, [
                 'apikey' => $this->apiKey,
-                'geocode' => $address,
+                'geocode' => $query,
                 'format' => 'json',
-                'results' => 1,
+                'results' => 5,
             ]);
             $data = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
         } catch (HttpClientException | JsonException $exception) {
             throw new GeocodingException(
-                'Не удалось получить координаты адреса.',
+                'Не удалось получить варианты адреса.',
                 0,
                 $exception,
             );
         }
 
-        $position = $data['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'] ?? null;
-
-        return $this->parsePosition($position);
+        return is_array($data) ? $data : [];
     }
 
     /**

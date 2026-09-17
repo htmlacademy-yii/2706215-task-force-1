@@ -8,6 +8,7 @@ use Sanweb\Taskforce\dto\TaskCreateDto;
 use app\models\Category;
 use app\models\City;
 use app\validators\FileNameValidator;
+use app\validators\LocationCoordinatesValidator;
 use DateTimeImmutable;
 use yii\base\Model;
 
@@ -22,6 +23,8 @@ class TaskCreateForm extends Model
     public string|int $budget = '';
     public string $expireDate = '';
     public string|null $location = null;
+    public string|float|null $latitude = null;
+    public string|float|null $longitude = null;
     public string|int|null $cityId = null;
     public array|string|null $files = null;
 
@@ -32,13 +35,16 @@ class TaskCreateForm extends Model
     {
         return [
             [['title', 'description', 'location'], 'trim'],
-            [['location', 'cityId'], 'default', 'value' => null],
+            [['location', 'latitude', 'longitude', 'cityId'], 'default', 'value' => null],
 
             [['categoryId', 'title', 'description', 'budget', 'expireDate'], 'required'],
 
             ['title', 'string', 'min' => 5, 'max' => 255],
             ['description', 'string'],
             ['location', 'string', 'max' => 255],
+            ['latitude', 'number', 'min' => -90, 'max' => 90],
+            ['longitude', 'number', 'min' => -180, 'max' => 180],
+            ['location', LocationCoordinatesValidator::class],
 
             ['files', 'file', 'skipOnEmpty' => true, 'maxFiles' => 0],
             ['files', FileNameValidator::class],
@@ -108,6 +114,8 @@ class TaskCreateForm extends Model
             expireDate: $this->expireDate,
             location: $this->location,
             cityId: $this->cityId === null ? null : (int) $this->cityId,
+            latitude: $this->latitude === null ? null : (float) $this->latitude,
+            longitude: $this->longitude === null ? null : (float) $this->longitude,
         );
     }
 }
