@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\repositories;
+namespace Sanweb\Taskforce\repositories;
 
 use app\models\User;
 

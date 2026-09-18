@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\dto;
+namespace Sanweb\Taskforce\dto;
 
 /**
  * Contains validated data required to create a task.
@@ -20,5 +20,7 @@ final readonly class TaskCreateDto
         public string $expireDate,
         public ?string $location,
         public ?int $cityId,
+        public ?float $latitude = null,
+        public ?float $longitude = null,
     ) {}
 }

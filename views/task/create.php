@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use app\assets\TaskCreateAsset;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /**
@@ -11,6 +13,7 @@ use yii\widgets\ActiveForm;
  */
 
 $this->params['mainClass'] = 'main-content main-content--center';
+TaskCreateAsset::register($this);
 ?>
 
 <div class="add-task-form regular-form">
@@ -39,9 +42,17 @@ $this->params['mainClass'] = 'main-content main-content--center';
         [
             'inputOptions' => [
                 'class' => 'location-icon',
+                'autocomplete' => 'off',
+                'data-location-autocomplete' => true,
+                'data-suggestions-url' => Url::to(['geo/suggestions']),
+                'data-latitude-input' => Html::getInputId($model, 'latitude'),
+                'data-longitude-input' => Html::getInputId($model, 'longitude'),
             ],
         ]
     )->textInput() ?>
+
+    <?= Html::activeHiddenInput($model, 'latitude') ?>
+    <?= Html::activeHiddenInput($model, 'longitude') ?>
 
     <div class="half-wrapper">
         <?= $form->field(

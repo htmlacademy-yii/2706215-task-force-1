@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace app\services;
+namespace Sanweb\Taskforce\services;
 
-use app\dto\UserSignupDto;
+use Sanweb\Taskforce\dto\UserSignupDto;
 use app\models\ExecutorProfile;
 use app\models\User;
 use Sanweb\Taskforce\exception\UserSignupException;
@@ -24,7 +24,7 @@ final class UserService
             $user->name = $dto->name;
             $user->email = $dto->email;
             $user->city_id = $dto->cityId;
-            $user->is_executor = $dto->isExecutor;
+            $user->is_executor = (int) $dto->isExecutor;
 
             $user->setPassword($dto->password);
 

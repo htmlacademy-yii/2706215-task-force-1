@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace app\forms;
 
-use app\dto\TaskFilterDto;
+use Sanweb\Taskforce\dto\TaskFilterDto;
 use yii\base\Model;
 
 /**

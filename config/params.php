@@ -7,6 +7,10 @@ return [
     'pagination' => [
         'tasksPageSize' => 5,
     ],
+    'yandex' => [
+        'geocoderApiKey' => $_ENV['YANDEX_GEOCODER_API_KEY'] ?? '',
+        'mapsApiKey' => $_ENV['YANDEX_MAPS_API_KEY'] ?? '',
+    ],
     'fileStorage' => [
         // Unlike the assignment requirements, task attachments are stored
         // outside the public web directory and served through a controller.

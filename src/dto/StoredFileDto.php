@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\dto;
+namespace Sanweb\Taskforce\dto;
 
 /**
  * Contains metadata of a file saved in storage.

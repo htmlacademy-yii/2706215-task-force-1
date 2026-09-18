@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace app\services;
+namespace Sanweb\Taskforce\services;
 
-use app\dto\TaskCreateDto;
+use Sanweb\Taskforce\dto\TaskCreateDto;
 use app\models\Attachment;
 use app\models\Bid;
 use app\models\Review;
 use app\models\Task;
 use app\models\User;
-use app\repositories\TaskRepository;
+use Sanweb\Taskforce\repositories\TaskRepository;
 use Sanweb\Taskforce\enum\BidStatus;
 use Sanweb\Taskforce\enum\StorageArea;
 use Sanweb\Taskforce\enum\TaskAction;
@@ -37,7 +37,8 @@ final class TaskService
         private readonly FileStorage $fileStorage,
         private readonly TaskRepository $taskRepository,
         private readonly TaskWorkflow $taskWorkflow,
-    ) {}
+    ) {
+    }
 
     /**
      * Creates a task with files.
@@ -62,6 +63,11 @@ final class TaskService
             $task->expire_date = $dto->expireDate;
             $task->location = $dto->location;
             $task->city_id = $dto->cityId;
+
+            if ($dto->latitude !== null && $dto->longitude !== null) {
+                $task->lat = (string) $dto->latitude;
+                $task->lng = (string) $dto->longitude;
+            }
 
             if (!$task->save()) {
                 throw new TaskCreateException('Не удалось создать задание.');

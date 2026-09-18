@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace app\services;
+namespace Sanweb\Taskforce\services;
 
-use app\dto\UserLoginDto;
+use Sanweb\Taskforce\dto\UserLoginDto;
 use app\models\User;
-use app\repositories\UserRepository;
+use Sanweb\Taskforce\repositories\UserRepository;
 use yii\base\Security;
 
 final class AuthService

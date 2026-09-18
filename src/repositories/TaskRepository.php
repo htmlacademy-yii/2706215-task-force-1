@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace app\repositories;
+namespace Sanweb\Taskforce\repositories;
 
-use app\dto\TaskFilterDto;
+use Sanweb\Taskforce\dto\TaskFilterDto;
 use app\models\Attachment;
 use app\models\Bid;
 use app\models\Task;

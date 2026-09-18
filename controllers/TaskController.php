@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
-use app\dto\TaskFilterDto;
+use Sanweb\Taskforce\dto\TaskFilterDto;
 use app\forms\BidCreateForm;
 use app\forms\TaskCreateForm;
 use app\forms\TaskCompleteForm;
 use app\forms\TaskFilterForm;
 use app\models\Task;
 use app\models\User;
-use app\repositories\CategoryRepository;
-use app\repositories\TaskRepository;
-use app\services\FileStorage;
-use app\services\TaskService;
+use Sanweb\Taskforce\repositories\CategoryRepository;
+use Sanweb\Taskforce\repositories\TaskRepository;
+use Sanweb\Taskforce\services\FileStorage;
+use Sanweb\Taskforce\services\TaskService;
 use Sanweb\Taskforce\enum\StorageArea;
 use Sanweb\Taskforce\enum\TaskAction;
 use Sanweb\Taskforce\exception\EntityNotFoundException;
