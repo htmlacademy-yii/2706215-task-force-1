@@ -17,6 +17,14 @@ final class UserRepository
     }
 
     /**
+     * Finds a user by their permanent GitHub account ID.
+     */
+    public function findByGithubId(int $githubId): ?User
+    {
+        return User::findOne(['github_id' => $githubId]);
+    }
+
+    /**
      * Finds a user by email.
      */
     public function findByEmail(string $email): ?User

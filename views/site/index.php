@@ -5,6 +5,7 @@ declare(strict_types=1);
 /** @var yii\web\View $this */
 /** @var app\forms\UserLoginForm $loginForm */
 /** @var bool $showLoginModal */
+/** @var bool $githubAuthEnabled */
 
 use yii\helpers\Url;
 
@@ -106,4 +107,5 @@ $this->params['meta_keywords'] = '';
 <?= $this->render('_loginModal', [
     'loginForm' => $loginForm,
     'isOpen' => $showLoginModal,
+    'githubAuthEnabled' => $githubAuthEnabled,
 ]) ?>

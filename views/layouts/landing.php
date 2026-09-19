@@ -6,6 +6,7 @@ declare(strict_types=1);
 /** @var string $content */
 
 use app\assets\LandingAsset;
+use app\widgets\Alert;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -68,6 +69,7 @@ $this->render('_head');
         </header>
 
         <main>
+            <?= Alert::widget() ?>
             <?= $content ?>
         </main>
 

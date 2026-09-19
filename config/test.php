@@ -50,6 +50,17 @@ return [
         'user' => [
             'identityClass' => \app\models\User::class,
         ],
+        'authClientCollection' => [
+            'class' => \yii\authclient\Collection::class,
+            'clients' => [
+                'github' => [
+                    'class' => \yii\authclient\clients\GitHub::class,
+                    'clientId' => 'test-client-id',
+                    'clientSecret' => 'test-client-secret',
+                    'scope' => 'user:email',
+                ],
+            ],
+        ],
         'request' => [
             'cookieValidationKey' => 'test',
             'enableCsrfValidation' => false,

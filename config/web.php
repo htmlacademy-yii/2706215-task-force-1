@@ -47,6 +47,17 @@ $config = [
             'identityClass' => \app\models\User::class,
             'enableAutoLogin' => true,
         ],
+        'authClientCollection' => [
+            'class' => \yii\authclient\Collection::class,
+            'clients' => [
+                'github' => [
+                    'class' => \yii\authclient\clients\GitHub::class,
+                    'clientId' => $params['github']['clientId'],
+                    'clientSecret' => $params['github']['clientSecret'],
+                    'scope' => 'user:email',
+                ],
+            ],
+        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],

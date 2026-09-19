@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `city` (
 -- User
 CREATE TABLE IF NOT EXISTS `user` (
     `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `github_id`     BIGINT UNSIGNED NULL,
     `email`         VARCHAR(255)    NOT NULL,
     `name`          VARCHAR(128)    NOT NULL,
     `password`      VARCHAR(255)    NULL,
@@ -33,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     `updated_at`    TIMESTAMP       NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
 
     UNIQUE INDEX `uq_user_email` (`email`),
+    UNIQUE INDEX `uq_user_github_id` (`github_id`),
 
     CONSTRAINT `fk_user_city`
         FOREIGN KEY (`city_id`)
