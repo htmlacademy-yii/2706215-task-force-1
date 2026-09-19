@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS `city` (
 -- User
 CREATE TABLE IF NOT EXISTS `user` (
     `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `github_id`     BIGINT UNSIGNED NULL,
     `email`         VARCHAR(255)    NOT NULL,
     `name`          VARCHAR(128)    NOT NULL,
     `password`      VARCHAR(255)    NULL,
@@ -34,7 +33,6 @@ CREATE TABLE IF NOT EXISTS `user` (
     `updated_at`    TIMESTAMP       NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
 
     UNIQUE INDEX `uq_user_email` (`email`),
-    UNIQUE INDEX `uq_user_github_id` (`github_id`),
 
     CONSTRAINT `fk_user_city`
         FOREIGN KEY (`city_id`)
@@ -54,13 +52,8 @@ CREATE TABLE IF NOT EXISTS `executor_profile` (
     -- hide contacts from everyone except the task customer
     `hide_my_contacts`  BOOLEAN         NOT NULL DEFAULT FALSE,
 
-    `status`            VARCHAR(32)     NOT NULL DEFAULT 'available',
-
     `created_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`        TIMESTAMP       NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT `chk_executor_profile_status`
-        CHECK (`status` IN ('available', 'busy', 'unavailable')),
 
     UNIQUE INDEX `uq_executor_profile_user` (`user_id`),
 
@@ -173,7 +166,6 @@ CREATE TABLE IF NOT EXISTS `bid` (
     `task_id`   BIGINT UNSIGNED NOT NULL,
 
     `price`     BIGINT UNSIGNED NOT NULL,
-    `comment`   TEXT            NULL,
 
     `status`    VARCHAR(16) NOT NULL DEFAULT 'new',
 
