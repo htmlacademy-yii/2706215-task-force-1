@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Sanweb\Taskforce\repositories;
 
+use DateTimeImmutable;
 use Sanweb\Taskforce\dto\TaskFilterDto;
 use app\models\Attachment;
 use app\models\Bid;
 use app\models\Task;
+use Sanweb\Taskforce\enum\MyTaskFilter;
 use Sanweb\Taskforce\enum\TaskStatus;
 use yii\db\ActiveQuery;
 
@@ -16,6 +18,56 @@ use yii\db\ActiveQuery;
  */
 final class TaskRepository
 {
+    /**
+     * Builds a query for tasks belonging to the current user's role context.
+     *
+     * @return ActiveQuery<Task>
+     */
+    public function findMyTasksQuery(
+        int $userId,
+        bool $isExecutor,
+        MyTaskFilter $filter,
+        ?DateTimeImmutable $today = null,
+    ): ActiveQuery {
+        $query = Task::find()
+            ->orderBy(['task.created_at' => SORT_DESC])
+            ->with(['category', 'city']);
+
+        if ($isExecutor) {
+            $query
+                ->innerJoin('bid', 'bid.task_id = task.id')
+                ->andWhere(['bid.user_id' => $userId])
+                ->distinct();
+        } else {
+            $query->andWhere(['task.customer_id' => $userId]);
+        }
+
+        $todayValue = ($today ?? new DateTimeImmutable('today'))->format('Y-m-d');
+
+        match ($filter) {
+            MyTaskFilter::New => $query->andWhere([
+                'task.status' => TaskStatus::New->value,
+            ]),
+            MyTaskFilter::InProgress => $query
+                ->andWhere(['task.status' => TaskStatus::InProgress->value])
+                ->andFilterWhere($isExecutor ? ['>=', 'task.expire_date', $todayValue] : []),
+            MyTaskFilter::Overdue => $query
+                ->andWhere(['task.status' => TaskStatus::InProgress->value])
+                ->andWhere(['<', 'task.expire_date', $todayValue]),
+            MyTaskFilter::Closed => $query->andWhere([
+                'task.status' => $isExecutor
+                    ? [TaskStatus::Completed->value, TaskStatus::Failed->value]
+                    : [
+                        TaskStatus::Canceled->value,
+                        TaskStatus::Completed->value,
+                        TaskStatus::Failed->value,
+                    ],
+            ]),
+        };
+
+        return $query;
+    }
+
     /**
      * Builds a query for new tasks matching the filter.
      *

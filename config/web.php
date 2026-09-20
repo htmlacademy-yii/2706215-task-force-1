@@ -81,6 +81,7 @@ $config = [
                 'task/file/<id:\d+>' => 'task/download',
                 'task/create' => 'task/create',
                 'tasks' => 'task/index',
+                'my-tasks' => 'my-task/index',
                 'user/view/<id:\d+>' => 'user/view',
                 'signup' => 'user/signup',
                 'login' => 'site/login',
