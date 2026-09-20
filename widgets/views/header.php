@@ -10,6 +10,7 @@ use yii\helpers\Url;
 /** @var bool $canCreateTask */
 /** @var string $route */
 /** @var string $userName */
+/** @var string $avatarUrl */
 ?>
 
 <header class="page-header">
@@ -17,38 +18,43 @@ use yii\helpers\Url;
         <a href="<?= Url::to(['site/index']) ?>" class="header-logo">
             <img class="logo-image" src="/img/logotype.png" width=227 height=60 alt="taskforce">
         </a>
-        <div class="nav-wrapper">
-            <ul class="nav-list">
-                <li class="list-item<?= $route === 'task/index' ? ' list-item--active' : '' ?>">
-                    <a href="<?= Url::to(['/task/index']) ?>" class="link link--nav">Новое</a>
-                </li>
-                <?php if (!$isGuest): ?>
+        <?php if (!$isGuest): ?>
+            <div class="nav-wrapper">
+                <ul class="nav-list">
+                    <li class="list-item<?= $route === 'task/index' ? ' list-item--active' : '' ?>">
+                        <a href="<?= Url::to(['/task/index']) ?>" class="link link--nav">Новое</a>
+                    </li>
                     <li class="list-item<?= $route === 'my-task/index' ? ' list-item--active' : '' ?>">
                         <a href="<?= Url::to(['/my-task/index']) ?>" class="link link--nav">Мои задания</a>
                     </li>
-                <?php endif; ?>
-                <?php if ($canCreateTask): ?>
-                    <li class="list-item">
-                        <a href="<?= Url::to(['/task/create']) ?>" class="link link--nav">Создать задание</a>
+                    <?php if ($canCreateTask): ?>
+                        <li class="list-item">
+                            <a href="<?= Url::to(['/task/create']) ?>" class="link link--nav">Создать задание</a>
+                        </li>
+                    <?php endif; ?>
+                    <li class="list-item<?= $route === 'account/settings' ? ' list-item--active' : '' ?>">
+                        <a href="<?= Url::to(['/account/settings']) ?>" class="link link--nav">Настройки</a>
                     </li>
-                <?php endif; ?>
-                <li class="list-item">
-                    <a href="#" class="link link--nav">Настройки</a>
-                </li>
-            </ul>
-        </div>
+                </ul>
+            </div>
+        <?php endif; ?>
     </nav>
     <?php if (!$isGuest): ?>
         <div class="user-block">
             <a href="#">
-                <img class="user-photo" src="/img/man-glasses.png" width="55" height="55" alt="Аватар">
+                <?= Html::img($avatarUrl, [
+                    'class' => 'user-photo',
+                    'width' => 55,
+                    'height' => 55,
+                    'alt' => 'Аватар',
+                ]) ?>
             </a>
             <div class="user-menu">
                 <p class="user-name"><?= Html::encode($userName) ?></p>
                 <div class="popup-head">
                     <ul class="popup-menu">
                         <li class="menu-item">
-                            <a href="#" class="link">Настройки</a>
+                            <a href="<?= Url::to(['/account/settings']) ?>" class="link">Настройки</a>
                         </li>
                         <li class="menu-item">
                             <a href="#" class="link">Связаться с нами</a>
