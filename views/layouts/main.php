@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 use app\assets\AppAsset;
 use app\widgets\Alert;
+use app\widgets\HeaderWidget;
 use yii\bootstrap5\Breadcrumbs;
 use yii\helpers\Html;
 
@@ -23,7 +24,7 @@ $this->render('_head');
 <body>
 <?php $this->beginBody() ?>
 
-<?= $this->render('_header') ?>
+<?= HeaderWidget::widget() ?>
 <main class="container <?= Html::encode($this->params['mainClass'] ?? 'main-content') ?>">
     <?php if (!empty($this->params['breadcrumbs'])): ?>
         <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
