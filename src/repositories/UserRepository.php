@@ -9,6 +9,17 @@ use app\models\User;
 final class UserRepository
 {
     /**
+     * Finds the current user with relations required by account settings.
+     */
+    public function findForSettings(int $id): ?User
+    {
+        return User::find()
+            ->where(['id' => $id])
+            ->with(['executorProfile', 'executorSpecializations'])
+            ->one();
+    }
+
+    /**
      * Finds a user by ID.
      */
     public function findById(int $id): ?User

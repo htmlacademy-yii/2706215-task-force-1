@@ -70,6 +70,20 @@ final class FileStorage
     }
 
     /**
+     * Removes one stored file when it exists.
+     *
+     * @throws FileException
+     */
+    public function remove(StorageArea $storageArea, string $filePath): void
+    {
+        $path = $this->getAbsolutePath($storageArea, $filePath);
+
+        if (is_file($path) && !unlink($path)) {
+            throw new FileException('Не удалось удалить файл.');
+        }
+    }
+
+    /**
      * Returns an existing stored file path.
      *
      * @throws FileException
