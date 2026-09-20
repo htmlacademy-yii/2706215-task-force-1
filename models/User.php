@@ -15,6 +15,7 @@ use yii\web\IdentityInterface;
  * This is the model class for table "user".
  *
  * @property int $id
+ * @property int|null $github_id
  * @property string $email
  * @property string $name
  * @property string|null $password
@@ -103,13 +104,14 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules(): array
     {
         return [
-            [['password', 'city_id', 'avatar', 'birthday'], 'default', 'value' => null],
+            [['github_id', 'password', 'city_id', 'avatar', 'birthday'], 'default', 'value' => null],
             [['is_executor'], 'default', 'value' => 0],
 
             [['email', 'name'], 'trim'],
             [['email', 'name'], 'required'],
 
             [['city_id'], 'integer'],
+            [['github_id'], 'integer', 'min' => 1],
             [['is_executor'], 'boolean'],
 
             [['birthday'], 'date', 'format' => 'php:Y-m-d'],
@@ -119,6 +121,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             [['email'], 'email'],
             [['email'], 'unique'],
+            [['github_id'], 'unique'],
 
             [['city_id'], 'exist', 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
         ];
@@ -131,6 +134,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             'id' => 'ID',
+            'github_id' => 'GitHub ID',
             'email' => 'Email',
             'name' => 'Name',
             'password' => 'Password',

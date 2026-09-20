@@ -1,0 +1,202 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Sanweb\Taskforce\services;
+
+use app\models\User;
+use Sanweb\Taskforce\exception\GithubAuthException;
+use Sanweb\Taskforce\repositories\UserRepository;
+use Throwable;
+use yii\authclient\ClientInterface;
+use yii\db\IntegrityException;
+
+/**
+ * Registers or finds a user authenticated by GitHub.
+ */
+final class GithubAuthService
+{
+    public function __construct(
+        private readonly UserRepository $userRepository,
+    ) {
+    }
+
+    /**
+     * Returns a user identified by the permanent GitHub account ID.
+     *
+     * @throws GithubAuthException
+     */
+    public function authenticate(ClientInterface $client): User
+    {
+        if ($client->getId() !== 'github') {
+            throw new GithubAuthException('Неподдерживаемый сервис авторизации.');
+        }
+
+        $attributes = $client->getUserAttributes();
+        $githubId = $this->extractGithubId($attributes);
+
+        $user = $this->userRepository->findByGithubId($githubId);
+
+        if ($user !== null) {
+            return $user;
+        }
+
+        $email = $this->extractEmail($attributes);
+        $transaction = User::getDb()->beginTransaction();
+
+        try {
+            // The callback can be processed concurrently, so repeat the lookup
+            // after starting the transaction before creating or linking a user.
+            $user = $this->userRepository->findByGithubId($githubId);
+
+            if ($user === null) {
+                $user = $this->register($githubId, $email, $attributes);
+            }
+
+            $transaction->commit();
+        } catch (IntegrityException $exception) {
+            if ($transaction->isActive) {
+                $transaction->rollBack();
+            }
+
+            // A concurrent callback may have saved the same GitHub ID first.
+            $user = $this->userRepository->findByGithubId($githubId);
+
+            if ($user === null) {
+                throw new GithubAuthException(
+                    'Не удалось связать аккаунт GitHub с пользователем.',
+                    0,
+                    $exception,
+                );
+            }
+        } catch (GithubAuthException $exception) {
+            if ($transaction->isActive) {
+                $transaction->rollBack();
+            }
+
+            throw $exception;
+        } catch (Throwable $exception) {
+            if ($transaction->isActive) {
+                $transaction->rollBack();
+            }
+
+            throw new GithubAuthException(
+                'Не удалось выполнить вход через GitHub.',
+                0,
+                $exception,
+            );
+        }
+
+        $user = $this->userRepository->findByGithubId($githubId);
+
+        if ($user === null) {
+            throw new GithubAuthException('Пользователь GitHub не найден после регистрации.');
+        }
+
+        return $user;
+    }
+
+    /**
+     * @param array<string, mixed> $attributes
+     *
+     * @throws GithubAuthException
+     */
+    private function extractGithubId(array $attributes): int
+    {
+        $githubId = filter_var(
+            $attributes['id'] ?? null,
+            FILTER_VALIDATE_INT,
+            ['options' => ['min_range' => 1]],
+        );
+
+        if ($githubId === false) {
+            throw new GithubAuthException('GitHub не вернул корректный ID пользователя.');
+        }
+
+        return $githubId;
+    }
+
+    /**
+     * @param array<string, mixed> $attributes
+     *
+     * @throws GithubAuthException
+     */
+    private function extractEmail(array $attributes): string
+    {
+        $email = mb_strtolower(trim((string) ($attributes['email'] ?? '')));
+
+        if ($email === '' || filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            throw new GithubAuthException(
+                'GitHub не предоставил подтверждённый email. Проверьте настройки аккаунта GitHub.',
+            );
+        }
+
+        return $email;
+    }
+
+    /**
+     * @param array<string, mixed> $attributes
+     *
+     * @throws GithubAuthException
+     */
+    private function register(int $githubId, string $email, array $attributes): User
+    {
+        $user = $this->userRepository->findByEmail($email);
+
+        if ($user !== null) {
+            if ($user->github_id !== null && (int) $user->github_id !== $githubId) {
+                throw new GithubAuthException(
+                    'Этот email уже связан с другим аккаунтом GitHub.',
+                );
+            }
+
+            $updatedRows = User::updateAll(
+                ['github_id' => $githubId],
+                ['id' => $user->id, 'github_id' => null],
+            );
+
+            if ($updatedRows !== 1) {
+                throw new GithubAuthException(
+                    'Не удалось связать аккаунт GitHub с пользователем.',
+                );
+            }
+
+            $linkedUser = $this->userRepository->findByGithubId($githubId);
+
+            if ($linkedUser === null) {
+                throw new GithubAuthException(
+                    'Пользователь не найден после привязки аккаунта GitHub.',
+                );
+            }
+
+            return $linkedUser;
+        }
+
+        $name = trim((string) ($attributes['name'] ?? ''));
+
+        if ($name === '') {
+            $name = trim((string) ($attributes['login'] ?? ''));
+        }
+
+        if ($name === '') {
+            throw new GithubAuthException('GitHub не вернул имя пользователя.');
+        }
+
+        $avatar = trim((string) ($attributes['avatar_url'] ?? ''));
+
+        $user = new User();
+        $user->github_id = $githubId;
+        $user->email = $email;
+        $user->name = mb_substr($name, 0, 128);
+        $user->password = null;
+        $user->city_id = null;
+        $user->avatar = $avatar === '' ? null : mb_substr($avatar, 0, 255);
+        $user->is_executor = 0;
+
+        if (!$user->save()) {
+            throw new GithubAuthException('Не удалось зарегистрировать пользователя через GitHub.');
+        }
+
+        return $user;
+    }
+}

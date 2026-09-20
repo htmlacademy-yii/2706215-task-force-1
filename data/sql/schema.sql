@@ -52,13 +52,8 @@ CREATE TABLE IF NOT EXISTS `executor_profile` (
     -- hide contacts from everyone except the task customer
     `hide_my_contacts`  BOOLEAN         NOT NULL DEFAULT FALSE,
 
-    `status`            VARCHAR(32)     NOT NULL DEFAULT 'available',
-
     `created_at`        TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`        TIMESTAMP       NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT `chk_executor_profile_status`
-        CHECK (`status` IN ('available', 'busy', 'unavailable')),
 
     UNIQUE INDEX `uq_executor_profile_user` (`user_id`),
 
@@ -171,7 +166,6 @@ CREATE TABLE IF NOT EXISTS `bid` (
     `task_id`   BIGINT UNSIGNED NOT NULL,
 
     `price`     BIGINT UNSIGNED NOT NULL,
-    `comment`   TEXT            NULL,
 
     `status`    VARCHAR(16) NOT NULL DEFAULT 'new',
 

@@ -6,7 +6,11 @@ namespace app\controllers;
 
 use Yii;
 use app\forms\UserLoginForm;
+use Sanweb\Taskforce\exception\GithubAuthException;
 use Sanweb\Taskforce\services\AuthService;
+use Sanweb\Taskforce\services\GithubAuthService;
+use yii\authclient\AuthAction;
+use yii\authclient\ClientInterface;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -22,6 +26,7 @@ class SiteController extends Controller
         mixed $id,
         mixed $module,
         private readonly AuthService $authService,
+        private readonly GithubAuthService $githubAuthService,
         array $config = [],
     ) {
         parent::__construct($id, $module, $config);
@@ -62,7 +67,47 @@ class SiteController extends Controller
             'error' => [
                 'class' => ErrorAction::class,
             ],
+            'auth' => [
+                'class' => AuthAction::class,
+                'successCallback' => [$this, 'onAuthSuccess'],
+                'cancelCallback' => [$this, 'onAuthCancel'],
+            ],
         ];
+    }
+
+    /**
+     * Logs in a user after a successful GitHub OAuth callback.
+     */
+    public function onAuthSuccess(ClientInterface $client): void
+    {
+        if (!Yii::$app->user->isGuest) {
+            return;
+        }
+
+        try {
+            $user = $this->githubAuthService->authenticate($client);
+
+            if (!Yii::$app->user->login($user)) {
+                throw new GithubAuthException('Не удалось авторизовать пользователя.');
+            }
+        } catch (GithubAuthException $exception) {
+            Yii::warning([
+                'message' => $exception->getMessage(),
+                'cause' => $exception->getPrevious()?->getMessage(),
+            ], __METHOD__);
+            Yii::$app->session->setFlash('error', $exception->getMessage());
+        }
+    }
+
+    /**
+     * Handles a user-cancelled GitHub OAuth flow.
+     */
+    public function onAuthCancel(ClientInterface $client): void
+    {
+        Yii::$app->session->setFlash(
+            'info',
+            sprintf('Вход через %s отменён.', $client->getTitle()),
+        );
     }
 
     /**
@@ -80,6 +125,7 @@ class SiteController extends Controller
         return $this->render('index', [
             'loginForm' => new UserLoginForm(),
             'showLoginModal' => false,
+            'githubAuthEnabled' => $this->isGithubAuthEnabled(),
         ]);
     }
 
@@ -112,6 +158,7 @@ class SiteController extends Controller
         return $this->render('index', [
             'loginForm' => $loginForm,
             'showLoginModal' => true,
+            'githubAuthEnabled' => $this->isGithubAuthEnabled(),
         ]);
     }
 
@@ -125,5 +172,16 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    /**
+     * Whether GitHub authentication is configured for the interface.
+     */
+    private function isGithubAuthEnabled(): bool
+    {
+        $githubConfig = Yii::$app->params['github'] ?? [];
+
+        return !empty($githubConfig['clientId'])
+            && !empty($githubConfig['clientSecret']);
     }
 }

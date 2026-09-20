@@ -2448,6 +2448,52 @@ footer {
 .enter-form {
   display: none; }
 
+.button__full-width {
+  box-sizing: border-box;
+  width: 100%; }
+
+.form-modal .button__full-width {
+  float: none; }
+
+.button__secondary {
+  color: #24292f;
+  background-color: #ffffff;
+  border-color: #d0d7de; }
+
+.button__secondary:hover {
+  color: #24292f;
+  background-color: #f3f4f6;
+  border-color: #afb8c1; }
+
+.button__secondary:active {
+  color: #24292f;
+  background-color: #ebedf0;
+  border-color: #8c959f; }
+
+.button__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; }
+
+.button__icon .auth-icon {
+  margin: -6px;
+  transform: scale(0.625); }
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  color: #777777; }
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #dedede; }
+
 .response-form {
   display: none;
   width: 480px;
