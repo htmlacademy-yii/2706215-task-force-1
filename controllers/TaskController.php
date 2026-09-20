@@ -10,7 +10,6 @@ use app\forms\TaskCreateForm;
 use app\forms\TaskCompleteForm;
 use app\forms\TaskFilterForm;
 use app\models\Task;
-use app\models\User;
 use Sanweb\Taskforce\repositories\CategoryRepository;
 use Sanweb\Taskforce\repositories\TaskRepository;
 use Sanweb\Taskforce\services\FileStorage;
@@ -375,21 +374,5 @@ class TaskController extends AuthorizedController
             'completeForm' => $completeForm ?? new TaskCompleteForm(),
             'activeModal' => $activeModal,
         ]);
-    }
-
-    /**
-     * Returns the authenticated application user.
-     *
-     * @throws ForbiddenHttpException
-     */
-    private function getCurrentUser(): User
-    {
-        $user = Yii::$app->user->identity;
-
-        if (!$user instanceof User) {
-            throw new ForbiddenHttpException('Требуется авторизация.');
-        }
-
-        return $user;
     }
 }

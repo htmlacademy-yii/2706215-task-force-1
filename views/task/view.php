@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use app\assets\TaskViewAsset;
+use app\components\AvatarUrlResolver;
 use app\forms\BidCreateForm;
 use app\forms\TaskCompleteForm;
 use app\widgets\RatingWidget;
@@ -22,6 +23,7 @@ use yii\helpers\Url;
 /** @var string|null $activeModal */
 
 TaskViewAsset::register($this);
+$avatarUrlResolver = new AvatarUrlResolver();
 ?>
 
 <div class="left-column">
@@ -76,7 +78,7 @@ TaskViewAsset::register($this);
             <div class="response-card">
                 <img
                     class="customer-photo"
-                    src="<?= Html::encode($bid->user->avatar ?? '/img/avatars/default.png') ?>"
+                    src="<?= Html::encode($avatarUrlResolver->resolve($bid->user->avatar)) ?>"
                     width="146"
                     height="156"
                     alt="Фото исполнителя"

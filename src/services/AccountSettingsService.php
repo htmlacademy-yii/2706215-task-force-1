@@ -1,0 +1,197 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Sanweb\Taskforce\services;
+
+use app\components\AvatarUrlResolver;
+use app\models\ExecutorProfile;
+use app\models\ExecutorSpecialization;
+use app\models\User;
+use Sanweb\Taskforce\dto\AccountProfileDto;
+use Sanweb\Taskforce\dto\AccountSecurityDto;
+use Sanweb\Taskforce\enum\StorageArea;
+use Sanweb\Taskforce\exception\AccountSettingsException;
+use Throwable;
+use Yii;
+use yii\web\UploadedFile;
+
+final class AccountSettingsService
+{
+    public function __construct(
+        private readonly FileStorage $fileStorage,
+        private readonly AvatarUrlResolver $avatarUrlResolver,
+    ) {}
+
+    /**
+     * @throws AccountSettingsException
+     */
+    public function updateProfile(
+        User $user,
+        AccountProfileDto $dto,
+        ?UploadedFile $avatarFile,
+    ): void {
+        $oldAvatar = $user->avatar;
+        $newAvatar = null;
+
+        try {
+            if ($avatarFile !== null) {
+                $newAvatar = $this->fileStorage->store(
+                    $avatarFile,
+                    StorageArea::UserAvatars,
+                    (string) $user->id,
+                )->filePath;
+            }
+
+            $transaction = Yii::$app->db->beginTransaction();
+
+            try {
+                $user->name = $dto->name;
+                $user->email = $dto->email;
+                $user->birthday = $dto->birthday;
+
+                if ($newAvatar !== null) {
+                    $user->avatar = $newAvatar;
+                }
+
+                if (!$user->save(false)) {
+                    throw new AccountSettingsException(
+                        'Не удалось сохранить пользователя.',
+                    );
+                }
+
+                if ((bool) $user->is_executor) {
+                    $this->updateExecutorProfile($user, $dto);
+                    $this->syncSpecializations($user->id, $dto->categoryIds);
+                }
+
+                $transaction->commit();
+            } catch (Throwable $exception) {
+                $transaction->rollBack();
+                throw $exception;
+            }
+        } catch (Throwable $exception) {
+            if ($newAvatar !== null) {
+                $this->removeAvatarSafely($newAvatar);
+                $user->avatar = $oldAvatar;
+            }
+
+            Yii::error($exception, __METHOD__);
+            throw new AccountSettingsException(
+                'Не удалось сохранить настройки профиля.',
+                0,
+                $exception,
+            );
+        }
+
+        if (
+            $newAvatar !== null
+            && is_string($oldAvatar)
+            && $this->avatarUrlResolver->isLocalKey($oldAvatar)
+        ) {
+            $this->removeAvatarSafely($oldAvatar);
+        }
+    }
+
+    /**
+     * @throws AccountSettingsException
+     */
+    public function updateSecurity(User $user, AccountSecurityDto $dto): void
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            if ($dto->newPassword !== null) {
+                $user->setPassword($dto->newPassword);
+
+                if (!$user->save(false)) {
+                    throw new AccountSettingsException('Не удалось сохранить пароль.');
+                }
+            }
+
+            if ((bool) $user->is_executor) {
+                $profile = $user->executorProfile ?? new ExecutorProfile();
+                $profile->user_id = $user->id;
+                $profile->hide_my_contacts = (int) $dto->hideMyContacts;
+
+                if (!$profile->save(false)) {
+                    throw new AccountSettingsException(
+                        'Не удалось сохранить видимость контактов.',
+                    );
+                }
+
+                $user->populateRelation('executorProfile', $profile);
+            }
+
+            $transaction->commit();
+        } catch (Throwable $exception) {
+            $transaction->rollBack();
+            Yii::error($exception, __METHOD__);
+            throw new AccountSettingsException(
+                'Не удалось сохранить настройки безопасности.',
+                0,
+                $exception,
+            );
+        }
+    }
+
+    private function updateExecutorProfile(User $user, AccountProfileDto $dto): void
+    {
+        $profile = $user->executorProfile ?? new ExecutorProfile();
+        $profile->user_id = $user->id;
+        $profile->phone = $dto->phone;
+        $profile->telegram = $dto->telegram;
+        $profile->about = $dto->about;
+
+        if (!$profile->save(false)) {
+            throw new AccountSettingsException(
+                'Не удалось сохранить профиль исполнителя.',
+            );
+        }
+
+        $user->populateRelation('executorProfile', $profile);
+    }
+
+    /**
+     * @param list<int> $categoryIds
+     */
+    private function syncSpecializations(int $userId, array $categoryIds): void
+    {
+        $currentIds = ExecutorSpecialization::find()
+            ->select('category_id')
+            ->where(['user_id' => $userId])
+            ->column();
+        $currentIds = array_map('intval', $currentIds);
+
+        $toDelete = array_diff($currentIds, $categoryIds);
+        $toAdd = array_diff($categoryIds, $currentIds);
+
+        if ($toDelete !== []) {
+            ExecutorSpecialization::deleteAll([
+                'user_id' => $userId,
+                'category_id' => $toDelete,
+            ]);
+        }
+
+        foreach ($toAdd as $categoryId) {
+            $specialization = new ExecutorSpecialization();
+            $specialization->user_id = $userId;
+            $specialization->category_id = $categoryId;
+
+            if (!$specialization->save(false)) {
+                throw new AccountSettingsException(
+                    'Не удалось сохранить специализации.',
+                );
+            }
+        }
+    }
+
+    private function removeAvatarSafely(string $avatar): void
+    {
+        try {
+            $this->fileStorage->remove(StorageArea::UserAvatars, $avatar);
+        } catch (Throwable $exception) {
+            Yii::error($exception, __METHOD__);
+        }
+    }
+}

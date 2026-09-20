@@ -24,6 +24,10 @@ use yii\db\ActiveRecord;
  */
 class ExecutorProfile extends ActiveRecord
 {
+    public const string PHONE_PATTERN = '/^7\d{10}$/';
+    public const string PHONE_VALIDATION_MESSAGE = 'Введите номер в формате 7XXXXXXXXXX.';
+    public const int ABOUT_MAX_LENGTH = 1000;
+
     /**
      * {@inheritdoc}
      */
@@ -45,11 +49,17 @@ class ExecutorProfile extends ActiveRecord
             [['user_id'], 'required'],
             [['user_id'], 'integer'],
 
-            [['about'], 'string'],
+            [['about'], 'string', 'max' => self::ABOUT_MAX_LENGTH],
 
             [['hide_my_contacts'], 'boolean'],
 
-            [['phone'], 'string', 'max' => 20],
+            [
+                ['phone'],
+                'match',
+                'pattern' => self::PHONE_PATTERN,
+                'message' => self::PHONE_VALIDATION_MESSAGE,
+            ],
+
             [['telegram'], 'string', 'max' => 64],
 
             [['user_id'], 'unique'],

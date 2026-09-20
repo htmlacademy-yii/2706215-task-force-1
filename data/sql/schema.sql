@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     `password`      VARCHAR(255)    NULL,
     `city_id`       BIGINT UNSIGNED NULL,
 
-    `avatar`        VARCHAR(255)    NULL, -- relative path to avatar file
+    `avatar`        VARCHAR(255)    NULL, -- relative local key or external HTTPS URL
     `birthday`      DATE            NULL,
 
     -- all users can create tasks, but only executors can submit bids

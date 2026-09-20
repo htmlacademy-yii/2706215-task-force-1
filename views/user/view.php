@@ -2,18 +2,26 @@
 
 declare(strict_types=1);
 
+use app\components\AvatarUrlResolver;
 use app\widgets\RatingWidget;
 use yii\helpers\Html;
 
 /** @var app\models\User $user */
 /** @var bool $canViewContacts */
+
+$avatarUrlResolver = new AvatarUrlResolver();
 ?>
 
 <div class="left-column">
     <h3 class="head-main">Астахов Павел</h3>
     <div class="user-card">
         <div class="photo-rate">
-            <img class="card-photo" src="<?= $user->avatar ?? '/img/avatars/default.png' ?>" width="191" height="190" alt="Фото пользователя">
+            <?= Html::img($avatarUrlResolver->resolve($user->avatar), [
+                'class' => 'card-photo',
+                'width' => 191,
+                'height' => 190,
+                'alt' => 'Фото пользователя',
+            ]) ?>
             <div class="card-rate">
                 <?= RatingWidget::widget([
                     'value' => $user->executorStats->avg_score ?? 0,
@@ -58,7 +66,7 @@ use yii\helpers\Html;
         <div class="response-card">
             <img
                 class="customer-photo"
-                src="<?= Html::encode($review->customer?->avatar ?? '/img/avatars/default.png') ?>"
+                src="<?= Html::encode($avatarUrlResolver->resolve($review->customer?->avatar)) ?>"
                 width="120"
                 height="127"
                 alt="<?= Html::encode('Фото ' . $review->customer?->name) ?>">
