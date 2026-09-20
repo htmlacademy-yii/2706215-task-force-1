@@ -8,8 +8,8 @@ declare(strict_types=1);
 use app\assets\AppAsset;
 use app\widgets\Alert;
 use app\widgets\HeaderWidget;
-use yii\bootstrap5\Breadcrumbs;
 use yii\helpers\Html;
+use yii\widgets\Breadcrumbs;
 
 AppAsset::register($this);
 $this->render('_head');
