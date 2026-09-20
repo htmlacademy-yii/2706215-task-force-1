@@ -8,14 +8,21 @@ use Yii;
 use yii\base\Widget;
 use yii\web\View;
 
+/**
+ * Renders a task address and an optional interactive Yandex map.
+ */
 final class TaskMapWidget extends Widget
 {
     public float|string|null $latitude = null;
 
     public float|string|null $longitude = null;
 
+    /** Human-readable task address. */
     public ?string $address = null;
 
+    /**
+     * {@inheritdoc}
+     */
     public function run(): string
     {
         $hasCoordinates = $this->latitude !== null && $this->longitude !== null;

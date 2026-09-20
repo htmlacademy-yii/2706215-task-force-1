@@ -14,12 +14,18 @@ use Sanweb\Taskforce\enum\TaskAction;
  */
 final class CancelTaskAction extends BaseTaskAction
 {
+    /**
+     * {@inheritdoc}
+     */
     #[Override]
     public function getAction(): TaskAction
     {
         return TaskAction::Cancel;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     #[Override]
     public function isAllowed(TaskContext $task, ActorContext $actor): bool
     {

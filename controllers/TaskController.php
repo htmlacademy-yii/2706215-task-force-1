@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
-use Sanweb\Taskforce\dto\TaskFilterDto;
 use app\forms\BidCreateForm;
-use app\forms\TaskCreateForm;
 use app\forms\TaskCompleteForm;
+use app\forms\TaskCreateForm;
 use app\forms\TaskFilterForm;
 use app\models\Task;
-use Sanweb\Taskforce\repositories\CategoryRepository;
-use Sanweb\Taskforce\repositories\TaskRepository;
-use Sanweb\Taskforce\services\FileStorage;
-use Sanweb\Taskforce\services\TaskService;
+use Sanweb\Taskforce\dto\TaskFilterDto;
 use Sanweb\Taskforce\enum\StorageArea;
 use Sanweb\Taskforce\enum\TaskAction;
 use Sanweb\Taskforce\exception\EntityNotFoundException;
 use Sanweb\Taskforce\exception\TaskActionException;
 use Sanweb\Taskforce\exception\TaskCreateException;
+use Sanweb\Taskforce\repositories\CategoryRepository;
+use Sanweb\Taskforce\repositories\TaskRepository;
+use Sanweb\Taskforce\services\FileStorage;
+use Sanweb\Taskforce\services\TaskService;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;

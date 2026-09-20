@@ -8,15 +8,23 @@ use InvalidArgumentException;
 use Sanweb\Taskforce\exception\FileException;
 use SplFileObject;
 
+/**
+ * Converts CSV data to SQL INSERT statements.
+ */
 final class CsvToSqlConverter
 {
     private SplFileObject $reader;
+
+    /** @var array{delimiter: string, enclosure: string, escape: string} */
     private array $options = [
         'delimiter' => ',',
         'enclosure' => '"',
         'escape' => '',
     ];
 
+    /**
+     * @param array{delimiter?: string, enclosure?: string, escape?: string} $options
+     */
     public function __construct(
         string $file,
         array $options = []
@@ -28,6 +36,9 @@ final class CsvToSqlConverter
         $this->reader = $this->createReader($file);
     }
 
+    /**
+     * Validates the input file.
+     */
     private function validateFile(string $file): void
     {
         if (!is_file($file)) {
@@ -43,6 +54,9 @@ final class CsvToSqlConverter
         }
     }
 
+    /**
+     * Creates and configures the CSV reader.
+     */
     private function createReader(string $file): SplFileObject
     {
         $reader = new SplFileObject($file, 'rb');
@@ -63,6 +77,9 @@ final class CsvToSqlConverter
         return $reader;
     }
 
+    /**
+     * Checks whether the file uses UTF-8.
+     */
     private function isUtf8(string $file): bool
     {
         $reader = new SplFileObject($file, 'rb');
@@ -76,6 +93,11 @@ final class CsvToSqlConverter
         return true;
     }
 
+    /**
+     * Yields non-empty CSV rows and removes a leading UTF-8 BOM.
+     *
+     * @return iterable<int, array<int, string|null>>
+     */
     public function read(): iterable
     {
         $this->reader->rewind();
@@ -96,6 +118,9 @@ final class CsvToSqlConverter
         }
     }
 
+    /**
+     * @param array<int, string|null> $row
+     */
     private function isEmptyRow(array $row): bool
     {
         foreach ($row as $value) {
@@ -107,6 +132,11 @@ final class CsvToSqlConverter
         return true;
     }
 
+    /**
+     * @param array<int, string|null> $row
+     *
+     * @return array<int, string|null>
+     */
     private function removeBom(array $row): array
     {
         if (
@@ -119,6 +149,11 @@ final class CsvToSqlConverter
         return $row;
     }
 
+    /**
+     * Converts selected CSV columns to a SQL INSERT file.
+     *
+     * @param array<string, string> $fields CSV columns mapped to SQL columns.
+     */
     public function convert(
         string $outputFile,
         string $table,
@@ -168,6 +203,9 @@ final class CsvToSqlConverter
         $writer->fwrite(';' . PHP_EOL);
     }
 
+    /**
+     * @param array<string, string> $fields
+     */
     private function validateConversionParameters(
         string $table,
         array $fields,
@@ -187,6 +225,9 @@ final class CsvToSqlConverter
         }
     }
 
+    /**
+     * Ensures a table or column name is a safe SQL identifier.
+     */
     private function validateIdentifier(string $identifier): void
     {
         if (preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $identifier) !== 1) {
@@ -194,6 +235,14 @@ final class CsvToSqlConverter
         }
     }
 
+    /**
+     * Resolves requested CSV columns to their numeric positions.
+     *
+     * @param array<int, string|null> $header
+     * @param array<string, string> $fields
+     *
+     * @return list<int>
+     */
     private function mapFields(
         array $header,
         array $fields,
@@ -213,6 +262,14 @@ final class CsvToSqlConverter
         return $indexes;
     }
 
+    /**
+     * Converts selected row values to SQL literals.
+     *
+     * @param array<int, string|null> $row
+     * @param list<int> $fieldIndexes
+     *
+     * @return list<string>
+     */
     private function convertRow(
         array $row,
         array $fieldIndexes,
@@ -230,6 +287,9 @@ final class CsvToSqlConverter
         return $result;
     }
 
+    /**
+     * Converts a CSV value to a SQL literal.
+     */
     private function quoteValue(?string $value): string
     {
         if ($value === null) {

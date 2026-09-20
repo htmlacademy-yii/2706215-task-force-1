@@ -16,10 +16,12 @@ use yii\db\IntegrityException;
  */
 final class GithubAuthService
 {
+    /**
+     * Creates the GitHub authentication service.
+     */
     public function __construct(
         private readonly UserRepository $userRepository,
-    ) {
-    }
+    ) {}
 
     /**
      * Returns a user identified by the permanent GitHub account ID.

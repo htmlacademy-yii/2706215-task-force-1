@@ -14,12 +14,18 @@ use Sanweb\Taskforce\enum\TaskAction;
  */
 final class CompleteTaskAction extends BaseTaskAction
 {
+    /**
+     * {@inheritdoc}
+     */
     #[Override]
     public function getAction(): TaskAction
     {
         return TaskAction::Complete;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     #[Override]
     public function isAllowed(TaskContext $task, ActorContext $actor): bool
     {

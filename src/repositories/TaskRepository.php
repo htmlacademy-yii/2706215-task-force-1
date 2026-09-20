@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Sanweb\Taskforce\repositories;
 
-use DateTimeImmutable;
-use Sanweb\Taskforce\dto\TaskFilterDto;
 use app\models\Attachment;
 use app\models\Bid;
 use app\models\Task;
+use DateTimeImmutable;
+use Sanweb\Taskforce\dto\TaskFilterDto;
 use Sanweb\Taskforce\enum\MyTaskFilter;
 use Sanweb\Taskforce\enum\TaskStatus;
 use yii\db\ActiveQuery;

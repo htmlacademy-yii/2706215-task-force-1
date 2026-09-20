@@ -6,6 +6,9 @@ namespace Sanweb\Taskforce\repositories;
 
 use app\models\User;
 
+/**
+ * Provides user read queries with scenario-specific relations.
+ */
 final class UserRepository
 {
     /**

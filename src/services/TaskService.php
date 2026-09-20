@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Sanweb\Taskforce\services;
 
-use Sanweb\Taskforce\dto\TaskCreateDto;
 use app\models\Attachment;
 use app\models\Bid;
 use app\models\Review;
 use app\models\Task;
 use app\models\User;
-use Sanweb\Taskforce\repositories\TaskRepository;
+use Sanweb\Taskforce\domain\task\ActorContext;
+use Sanweb\Taskforce\domain\task\TaskContext;
+use Sanweb\Taskforce\domain\task\TaskWorkflow;
+use Sanweb\Taskforce\dto\TaskCreateDto;
 use Sanweb\Taskforce\enum\BidStatus;
 use Sanweb\Taskforce\enum\StorageArea;
 use Sanweb\Taskforce\enum\TaskAction;
@@ -19,9 +21,7 @@ use Sanweb\Taskforce\exception\EntityNotFoundException;
 use Sanweb\Taskforce\exception\FileException;
 use Sanweb\Taskforce\exception\TaskActionException;
 use Sanweb\Taskforce\exception\TaskCreateException;
-use Sanweb\Taskforce\domain\task\ActorContext;
-use Sanweb\Taskforce\domain\task\TaskContext;
-use Sanweb\Taskforce\domain\task\TaskWorkflow;
+use Sanweb\Taskforce\repositories\TaskRepository;
 use Throwable;
 use yii\web\UploadedFile;
 
@@ -37,8 +37,7 @@ final class TaskService
         private readonly FileStorage $fileStorage,
         private readonly TaskRepository $taskRepository,
         private readonly TaskWorkflow $taskWorkflow,
-    ) {
-    }
+    ) {}
 
     /**
      * Creates a task with files.

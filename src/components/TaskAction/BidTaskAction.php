@@ -14,12 +14,18 @@ use Sanweb\Taskforce\enum\TaskAction;
  */
 final class BidTaskAction extends BaseTaskAction
 {
+    /**
+     * {@inheritdoc}
+     */
     #[Override]
     public function getAction(): TaskAction
     {
         return TaskAction::Bid;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     #[Override]
     public function isAllowed(TaskContext $task, ActorContext $actor): bool
     {

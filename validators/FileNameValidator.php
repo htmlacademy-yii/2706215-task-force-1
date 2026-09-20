@@ -11,6 +11,9 @@ use yii\validators\Validator;
  */
 final class FileNameValidator extends Validator
 {
+    /**
+     * {@inheritdoc}
+     */
     public function validateAttribute($model, $attribute): void
     {
         foreach ($model->$attribute as $file) {

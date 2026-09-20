@@ -10,6 +10,9 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 
+/**
+ * Base controller for authenticated users.
+ */
 abstract class AuthorizedController extends Controller
 {
     /**

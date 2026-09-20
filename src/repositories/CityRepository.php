@@ -6,6 +6,9 @@ namespace Sanweb\Taskforce\repositories;
 
 use app\models\City;
 
+/**
+ * Provides city read queries.
+ */
 final class CityRepository
 {
     /**

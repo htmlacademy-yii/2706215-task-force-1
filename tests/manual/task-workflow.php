@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Sanweb\Taskforce\enum\TaskAction;
-use Sanweb\Taskforce\enum\TaskStatus;
-use Sanweb\Taskforce\exception\TaskActionException;
 use Sanweb\Taskforce\domain\task\ActorContext;
 use Sanweb\Taskforce\domain\task\TaskContext;
 use Sanweb\Taskforce\domain\task\TaskWorkflow;
+use Sanweb\Taskforce\enum\TaskAction;
+use Sanweb\Taskforce\enum\TaskStatus;
+use Sanweb\Taskforce\exception\TaskActionException;
 
 require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 

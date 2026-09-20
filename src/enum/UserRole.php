@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace Sanweb\Taskforce\enum;
 
-use Sanweb\Taskforce\enum\trait\EnumNames;
 use Sanweb\Taskforce\enum\trait\EnumValues;
 use Sanweb\Taskforce\exception\MissingEnumLabelException;
 
+/**
+ * User roles available in TaskForce.
+ */
 enum UserRole: string
 {
-    use EnumNames, EnumValues;
+    use EnumValues;
 
     case Customer = 'customer';
     case Executor = 'executor';
 
+    /**
+     * Returns the localized role label.
+     */
     public function label(): string
     {
         return match ($this) {

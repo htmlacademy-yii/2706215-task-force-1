@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Sanweb\Taskforce\services\geocoding;
 
+use JsonException;
 use Sanweb\Taskforce\dto\CoordinatesDto;
 use Sanweb\Taskforce\services\http\HttpClientException;
 use Sanweb\Taskforce\services\http\HttpClientInterface;
-use JsonException;
 
 /**
  * Resolves addresses through the Yandex Geocoder HTTP API.

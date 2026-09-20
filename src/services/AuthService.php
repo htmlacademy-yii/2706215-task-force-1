@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace Sanweb\Taskforce\services;
 
-use Sanweb\Taskforce\dto\UserLoginDto;
 use app\models\User;
+use Sanweb\Taskforce\dto\UserLoginDto;
 use Sanweb\Taskforce\repositories\UserRepository;
 use yii\base\Security;
 
+/**
+ * Authenticates users with email and password.
+ */
 final class AuthService
 {
+    /**
+     * Creates the authentication service.
+     */
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly Security $security,

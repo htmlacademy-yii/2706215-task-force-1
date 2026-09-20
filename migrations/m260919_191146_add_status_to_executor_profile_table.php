@@ -2,6 +2,9 @@
 
 use yii\db\Migration;
 
+/**
+ * Adds availability status to executor profiles.
+ */
 class m260919_191146_add_status_to_executor_profile_table extends Migration
 {
     private const STATUS_CHECK_CONSTRAINT = 'chk_executor_profile_status';

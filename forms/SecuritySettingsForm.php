@@ -9,6 +9,9 @@ use app\validators\CurrentPasswordValidator;
 use Sanweb\Taskforce\dto\AccountSecurityDto;
 use yii\base\Model;
 
+/**
+ * Form for changing the password and contact visibility.
+ */
 final class SecuritySettingsForm extends Model
 {
     public string $oldPassword = '';
@@ -20,6 +23,9 @@ final class SecuritySettingsForm extends Model
     private bool $canChangePassword;
     private ?string $passwordHash;
 
+    /**
+     * Initializes security settings from the current user.
+     */
     public function __construct(User $user, array $config = [])
     {
         $this->isExecutor = (bool) $user->is_executor;
@@ -64,16 +70,25 @@ final class SecuritySettingsForm extends Model
         ];
     }
 
+    /**
+     * Whether executor-only security settings are available.
+     */
     public function isExecutor(): bool
     {
         return $this->isExecutor;
     }
 
+    /**
+     * Whether the account has a password that can be changed.
+     */
     public function canChangePassword(): bool
     {
         return $this->canChangePassword;
     }
 
+    /**
+     * Converts validated settings to a DTO.
+     */
     public function toDto(): AccountSecurityDto
     {
         return new AccountSecurityDto(
@@ -97,6 +112,9 @@ final class SecuritySettingsForm extends Model
         ];
     }
 
+    /**
+     * Whether any password-change field has been filled in.
+     */
     private function isPasswordChangeRequested(): bool
     {
         return $this->oldPassword !== ''

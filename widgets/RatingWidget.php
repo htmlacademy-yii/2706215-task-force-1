@@ -6,6 +6,9 @@ namespace app\widgets;
 
 use yii\base\Widget;
 
+/**
+ * Renders a read-only star rating.
+ */
 final class RatingWidget extends Widget
 {
     public const string SIZE_SMALL = 'small';
@@ -13,10 +16,15 @@ final class RatingWidget extends Widget
 
     private const int MAX_STARS = 5;
 
+    /** Numeric rating value. */
     public float $value;
 
+    /** Visual size passed to the rating view. */
     public string $size = self::SIZE_SMALL;
 
+    /**
+     * {@inheritdoc}
+     */
     public function run(): string
     {
         return $this->render('rating', [

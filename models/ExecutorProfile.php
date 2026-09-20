@@ -92,6 +92,9 @@ class ExecutorProfile extends ActiveRecord
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
+    /**
+     * Returns the executor status label.
+     */
     public function getStatusLabel(): string
     {
         return ExecutorStatus::from($this->status)->label();
