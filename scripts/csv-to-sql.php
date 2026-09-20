@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 use Sanweb\Taskforce\components\CsvToSqlConverter\CsvToSqlConverter;
 
-require_once __DIR__ . '/vendor/autoload.php';
+$projectRoot = dirname(__DIR__);
+
+require_once $projectRoot . '/vendor/autoload.php';
 
 $conversions = [
     [
-        'csv' => __DIR__ . '/data/categories.csv',
-        'sql' => __DIR__ . '/sql/categories.sql',
+        'csv' => $projectRoot . '/data/csv/categories.csv',
+        'sql' => $projectRoot . '/data/sql/categories.sql',
         'table' => 'category',
         'fields' => [
             'name' => 'name',
@@ -17,8 +19,8 @@ $conversions = [
         ],
     ],
     [
-        'csv' => __DIR__ . '/data/cities.csv',
-        'sql' => __DIR__ . '/sql/cities.sql',
+        'csv' => $projectRoot . '/data/csv/cities.csv',
+        'sql' => $projectRoot . '/data/sql/cities.sql',
         'table' => 'city',
         'fields' => [
             'name' => 'name',

@@ -9,7 +9,7 @@ use Sanweb\Taskforce\domain\task\ActorContext;
 use Sanweb\Taskforce\domain\task\TaskContext;
 use Sanweb\Taskforce\domain\task\TaskWorkflow;
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 /**
  * Asserts that a callback throws a task action exception.
