@@ -6,6 +6,9 @@ namespace Sanweb\Taskforce\repositories;
 
 use app\models\Category;
 
+/**
+ * Provides category read queries.
+ */
 final class CategoryRepository
 {
     /**

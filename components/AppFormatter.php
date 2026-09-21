@@ -6,6 +6,9 @@ namespace app\components;
 
 use yii\i18n\Formatter;
 
+/**
+ * Adds application-specific value formatting to the Yii formatter.
+ */
 final class AppFormatter extends Formatter
 {
     /**

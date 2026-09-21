@@ -9,8 +9,14 @@ use app\models\User;
 use Yii;
 use yii\base\Widget;
 
+/**
+ * Renders the application header for the current user and route.
+ */
 final class HeaderWidget extends Widget
 {
+    /**
+     * {@inheritdoc}
+     */
     public function run(): string
     {
         $identity = Yii::$app->user->identity;

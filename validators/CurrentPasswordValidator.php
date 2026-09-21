@@ -7,10 +7,16 @@ namespace app\validators;
 use Yii;
 use yii\validators\Validator;
 
+/**
+ * Validates a plaintext password against the stored password hash.
+ */
 final class CurrentPasswordValidator extends Validator
 {
     public string $passwordHash = '';
 
+    /**
+     * {@inheritdoc}
+     */
     public function validateAttribute($model, $attribute): void
     {
         $password = $model->$attribute;

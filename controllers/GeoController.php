@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
-use Sanweb\Taskforce\services\geocoding\GeocodingException;
 use Sanweb\Taskforce\services\geocoding\GeocoderInterface;
+use Sanweb\Taskforce\services\geocoding\GeocodingException;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Response;
@@ -15,6 +15,9 @@ use yii\web\Response;
  */
 final class GeoController extends AuthorizedController
 {
+    /**
+     * Creates the geocoding controller.
+     */
     public function __construct(
         mixed $id,
         mixed $module,
@@ -24,6 +27,9 @@ final class GeoController extends AuthorizedController
         parent::__construct($id, $module, $config);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function behaviors(): array
     {
         $behaviors = parent::behaviors();

@@ -2,6 +2,9 @@
 
 use yii\db\Migration;
 
+/**
+ * Adds an optional comment to task bids.
+ */
 class m260919_191128_add_comment_to_bid_table extends Migration
 {
     /**

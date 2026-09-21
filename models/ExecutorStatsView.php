@@ -16,6 +16,9 @@ use yii\db\ActiveRecord;
  */
 class ExecutorStatsView extends ActiveRecord
 {
+    /**
+     * {@inheritdoc}
+     */
     public static function tableName(): string
     {
         return 'executor_stats_view';

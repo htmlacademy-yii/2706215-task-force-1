@@ -2,6 +2,9 @@
 
 use yii\db\Migration;
 
+/**
+ * Adds a unique GitHub account identifier to users.
+ */
 class m260919_191154_add_github_id_to_user_table extends Migration
 {
     /**
@@ -23,6 +26,9 @@ class m260919_191154_add_github_id_to_user_table extends Migration
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function safeDown()
     {
         $this->dropIndex('uq_user_github_id', '{{%user}}');

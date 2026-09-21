@@ -14,12 +14,18 @@ use Sanweb\Taskforce\enum\TaskAction;
  */
 final class RefuseTaskAction extends BaseTaskAction
 {
+    /**
+     * {@inheritdoc}
+     */
     #[Override]
     public function getAction(): TaskAction
     {
         return TaskAction::Refuse;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     #[Override]
     public function isAllowed(TaskContext $task, ActorContext $actor): bool
     {

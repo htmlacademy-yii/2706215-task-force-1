@@ -426,6 +426,42 @@ template {
           flex: 0 0 100%;
   width: 100%; }
 
+.alert {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 18px 16px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  font-size: 16px;
+  line-height: 20px; }
+
+.alert-success {
+  color: #0f5132;
+  background-color: #d1e7dd; }
+
+.alert-danger {
+  color: #842029;
+  background-color: #f8d7da; }
+
+.alert-info {
+  color: #055160;
+  background-color: #cff4fc; }
+
+.alert-warning {
+  color: #664d03;
+  background-color: #fff3cd; }
+
+.alert-close {
+  float: right;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 24px;
+  line-height: 18px;
+  cursor: pointer; }
+
 .main-content--left {
   -webkit-box-pack: start;
       -ms-flex-pack: start;

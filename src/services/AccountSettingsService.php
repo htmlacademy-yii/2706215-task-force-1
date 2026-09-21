@@ -16,14 +16,22 @@ use Throwable;
 use Yii;
 use yii\web\UploadedFile;
 
+/**
+ * Coordinates transactional profile and security settings updates.
+ */
 final class AccountSettingsService
 {
+    /**
+     * Creates the account settings service.
+     */
     public function __construct(
         private readonly FileStorage $fileStorage,
         private readonly AvatarUrlResolver $avatarUrlResolver,
     ) {}
 
     /**
+     * Updates profile data, avatar, and executor specializations.
+     *
      * @throws AccountSettingsException
      */
     public function updateProfile(
@@ -94,6 +102,8 @@ final class AccountSettingsService
     }
 
     /**
+     * Updates the password and contact visibility.
+     *
      * @throws AccountSettingsException
      */
     public function updateSecurity(User $user, AccountSecurityDto $dto): void
@@ -135,6 +145,9 @@ final class AccountSettingsService
         }
     }
 
+    /**
+     * Creates or updates executor-specific profile fields.
+     */
     private function updateExecutorProfile(User $user, AccountProfileDto $dto): void
     {
         $profile = $user->executorProfile ?? new ExecutorProfile();
@@ -153,6 +166,8 @@ final class AccountSettingsService
     }
 
     /**
+     * Synchronizes executor specializations with selected categories.
+     *
      * @param list<int> $categoryIds
      */
     private function syncSpecializations(int $userId, array $categoryIds): void
@@ -186,6 +201,9 @@ final class AccountSettingsService
         }
     }
 
+    /**
+     * Removes a local avatar without masking the completed settings update.
+     */
     private function removeAvatarSafely(string $avatar): void
     {
         try {

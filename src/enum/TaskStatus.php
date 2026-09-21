@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Sanweb\Taskforce\enum;
 
-use Sanweb\Taskforce\enum\trait\EnumNames;
 use Sanweb\Taskforce\enum\trait\EnumValues;
 use Sanweb\Taskforce\exception\MissingEnumLabelException;
 
+/**
+ * Task lifecycle statuses stored in the database.
+ */
 enum TaskStatus: string
 {
-    use EnumNames, EnumValues;
+    use EnumValues;
 
     case New = 'new';
     case Canceled = 'canceled';
@@ -18,6 +20,9 @@ enum TaskStatus: string
     case Completed = 'completed';
     case Failed = 'failed';
 
+    /**
+     * Returns the localized status label.
+     */
     public function label(): string
     {
         return match ($this) {

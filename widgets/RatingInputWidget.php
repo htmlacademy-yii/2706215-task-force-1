@@ -8,12 +8,19 @@ use app\assets\RatingInputAsset;
 use yii\helpers\Html;
 use yii\widgets\InputWidget;
 
+/**
+ * Renders an interactive star-rating form input.
+ */
 final class RatingInputWidget extends InputWidget
 {
     private const int MAX_STARS = 5;
 
+    /** Visual size passed to the rating view. */
     public string $size = RatingWidget::SIZE_SMALL;
 
+    /**
+     * {@inheritdoc}
+     */
     public function run(): string
     {
         RatingInputAsset::register($this->getView());

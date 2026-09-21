@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace app\forms;
 
-use Sanweb\Taskforce\dto\UserSignupDto;
 use app\models\City;
 use app\models\User;
+use Sanweb\Taskforce\dto\UserSignupDto;
 use yii\base\Model;
 
 /**

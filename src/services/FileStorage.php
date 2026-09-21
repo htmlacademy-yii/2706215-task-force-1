@@ -121,6 +121,9 @@ final class FileStorage
         return $absolutePath;
     }
 
+    /**
+     * Creates the target directory when it does not exist.
+     */
     private function ensureDirectoryExists(string $directory): void
     {
         if (!FileHelper::createDirectory($directory)) {
@@ -128,6 +131,9 @@ final class FileStorage
         }
     }
 
+    /**
+     * Detects a file MIME type from its temporary contents.
+     */
     private function detectMimeType(UploadedFile $file): string
     {
         $mimeType = FileHelper::getMimeType($file->tempName);
@@ -139,6 +145,9 @@ final class FileStorage
         return $mimeType;
     }
 
+    /**
+     * Creates a random storage name with a MIME-derived extension.
+     */
     private function buildStoredName(string $mimeType): string
     {
         $name = bin2hex(random_bytes(16));
@@ -149,6 +158,9 @@ final class FileStorage
             : $name;
     }
 
+    /**
+     * Persists an uploaded file at the resolved storage path.
+     */
     private function saveFile(UploadedFile $file, string $path): void
     {
         if (!$file->saveAs($path)) {

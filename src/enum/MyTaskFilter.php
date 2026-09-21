@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Sanweb\Taskforce\enum;
 
+/**
+ * Filters available on the current user's task list.
+ */
 enum MyTaskFilter: string
 {
     case New = 'new';
@@ -25,11 +28,17 @@ enum MyTaskFilter: string
         return [self::New, self::InProgress, self::Closed];
     }
 
+    /**
+     * Returns the default filter for a user role.
+     */
     public static function defaultFor(bool $isExecutor): self
     {
         return self::availableFor($isExecutor)[0];
     }
 
+    /**
+     * Resolves a permitted filter value with a safe role-specific fallback.
+     */
     public static function fromRequest(?string $value, bool $isExecutor): self
     {
         $filter = $value === null ? null : self::tryFrom($value);
@@ -41,6 +50,9 @@ enum MyTaskFilter: string
         return $filter;
     }
 
+    /**
+     * Returns the short localized filter label.
+     */
     public function label(): string
     {
         return match ($this) {
@@ -51,6 +63,9 @@ enum MyTaskFilter: string
         };
     }
 
+    /**
+     * Returns the page heading for the selected filter.
+     */
     public function heading(): string
     {
         return match ($this) {

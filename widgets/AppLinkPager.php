@@ -6,6 +6,9 @@ namespace app\widgets;
 
 use yii\widgets\LinkPager;
 
+/**
+ * Applies the TaskForce markup classes to Yii pagination links.
+ */
 final class AppLinkPager extends LinkPager
 {
     public $options = ['class' => 'pagination-list'];

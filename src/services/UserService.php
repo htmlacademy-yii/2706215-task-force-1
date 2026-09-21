@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Sanweb\Taskforce\services;
 
-use Sanweb\Taskforce\dto\UserSignupDto;
 use app\models\ExecutorProfile;
 use app\models\User;
+use Sanweb\Taskforce\dto\UserSignupDto;
 use Sanweb\Taskforce\exception\UserSignupException;
 use Yii;
 
+/**
+ * Coordinates user registration and executor-profile creation.
+ */
 final class UserService
 {
     /**

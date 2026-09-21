@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace app\controllers;
 
 use app\forms\UserSignupForm;
+use Sanweb\Taskforce\exception\UserSignupException;
 use Sanweb\Taskforce\repositories\CityRepository;
 use Sanweb\Taskforce\repositories\TaskRepository;
 use Sanweb\Taskforce\repositories\UserRepository;
 use Sanweb\Taskforce\services\UserService;
-use Sanweb\Taskforce\exception\UserSignupException;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;

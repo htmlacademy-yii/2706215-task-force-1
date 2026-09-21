@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Sanweb\Taskforce\enum;
 
-use Sanweb\Taskforce\enum\trait\EnumNames;
 use Sanweb\Taskforce\enum\trait\EnumValues;
 use Sanweb\Taskforce\exception\MissingEnumLabelException;
 
@@ -13,7 +12,6 @@ use Sanweb\Taskforce\exception\MissingEnumLabelException;
  */
 enum TaskAction: string
 {
-    use EnumNames;
     use EnumValues;
 
     case Cancel = 'cancel';

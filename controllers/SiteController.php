@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
-use Yii;
 use app\forms\UserLoginForm;
 use Sanweb\Taskforce\exception\GithubAuthException;
 use Sanweb\Taskforce\services\AuthService;
 use Sanweb\Taskforce\services\GithubAuthService;
+use Yii;
 use yii\authclient\AuthAction;
 use yii\authclient\ClientInterface;
 use yii\filters\AccessControl;

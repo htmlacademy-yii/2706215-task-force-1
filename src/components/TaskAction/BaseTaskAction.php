@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Sanweb\Taskforce\components\TaskAction;
 
-use Sanweb\Taskforce\enum\TaskAction;
 use Sanweb\Taskforce\domain\task\ActorContext;
 use Sanweb\Taskforce\domain\task\TaskContext;
+use Sanweb\Taskforce\enum\TaskAction;
 
 /**
  * Base class for task actions (required by the specification).

@@ -176,6 +176,9 @@ final class ProfileSettingsForm extends Model
         ];
     }
 
+    /**
+     * Converts a stored birthday to the profile form format.
+     */
     private function formatBirthday(?string $birthday): string
     {
         if ($birthday === null) {
