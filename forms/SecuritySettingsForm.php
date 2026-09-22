@@ -25,6 +25,9 @@ final class SecuritySettingsForm extends Model
 
     /**
      * Initializes security settings from the current user.
+     *
+     * @param User $user
+     * @param array $config
      */
     public function __construct(User $user, array $config = [])
     {
@@ -44,6 +47,8 @@ final class SecuritySettingsForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -72,6 +77,8 @@ final class SecuritySettingsForm extends Model
 
     /**
      * Whether executor-only security settings are available.
+     *
+     * @return bool
      */
     public function isExecutor(): bool
     {
@@ -80,6 +87,8 @@ final class SecuritySettingsForm extends Model
 
     /**
      * Whether the account has a password that can be changed.
+     *
+     * @return bool
      */
     public function canChangePassword(): bool
     {
@@ -88,6 +97,8 @@ final class SecuritySettingsForm extends Model
 
     /**
      * Converts validated settings to a DTO.
+     *
+     * @return AccountSecurityDto
      */
     public function toDto(): AccountSecurityDto
     {
@@ -101,6 +112,8 @@ final class SecuritySettingsForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -114,6 +127,8 @@ final class SecuritySettingsForm extends Model
 
     /**
      * Whether any password-change field has been filled in.
+     *
+     * @return bool
      */
     private function isPasswordChangeRequested(): bool
     {

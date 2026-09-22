@@ -22,6 +22,8 @@ class City extends ActiveRecord
 {
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public static function tableName(): string
     {
@@ -30,6 +32,8 @@ class City extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -44,6 +48,8 @@ class City extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -57,6 +63,8 @@ class City extends ActiveRecord
 
     /**
      * Gets tasks located in this city.
+     *
+     * @return ActiveQuery
      */
     public function getTasks(): ActiveQuery
     {
@@ -65,6 +73,8 @@ class City extends ActiveRecord
 
     /**
      * Gets users from this city.
+     *
+     * @return ActiveQuery
      */
     public function getUsers(): ActiveQuery
     {

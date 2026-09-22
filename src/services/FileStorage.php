@@ -18,6 +18,8 @@ use yii\web\UploadedFile;
 final class FileStorage
 {
     /**
+     * Creates file storage with root aliases keyed by storage area.
+     *
      * @param array<string, string> $rootAliases
      */
     public function __construct(
@@ -26,6 +28,12 @@ final class FileStorage
 
     /**
      * Saves an uploaded file and returns its metadata.
+     *
+     * @param UploadedFile $file
+     * @param StorageArea $storageArea
+     * @param string $directory
+     *
+     * @return StoredFileDto
      *
      * @throws FileException
      */
@@ -58,6 +66,11 @@ final class FileStorage
     /**
      * Removes a directory with all stored files.
      *
+     * @param StorageArea $storageArea
+     * @param string $directory
+     *
+     * @return void
+     *
      * @throws FileException
      */
     public function removeDirectory(StorageArea $storageArea, string $directory): void
@@ -71,6 +84,11 @@ final class FileStorage
 
     /**
      * Removes one stored file when it exists.
+     *
+     * @param StorageArea $storageArea
+     * @param string $filePath
+     *
+     * @return void
      *
      * @throws FileException
      */
@@ -86,6 +104,11 @@ final class FileStorage
     /**
      * Returns an existing stored file path.
      *
+     * @param StorageArea $storageArea
+     * @param string $filePath
+     *
+     * @return ?string
+     *
      * @throws FileException
      */
     public function find(StorageArea $storageArea, string $filePath): ?string
@@ -97,6 +120,11 @@ final class FileStorage
 
     /**
      * Resolves a relative path inside the file storage.
+     *
+     * @param StorageArea $storageArea
+     * @param string $relativePath
+     *
+     * @return string
      */
     private function getAbsolutePath(StorageArea $storageArea, string $relativePath): string
     {
@@ -123,6 +151,10 @@ final class FileStorage
 
     /**
      * Creates the target directory when it does not exist.
+     *
+     * @param string $directory
+     *
+     * @return void
      */
     private function ensureDirectoryExists(string $directory): void
     {
@@ -133,6 +165,10 @@ final class FileStorage
 
     /**
      * Detects a file MIME type from its temporary contents.
+     *
+     * @param UploadedFile $file
+     *
+     * @return string
      */
     private function detectMimeType(UploadedFile $file): string
     {
@@ -147,6 +183,10 @@ final class FileStorage
 
     /**
      * Creates a random storage name with a MIME-derived extension.
+     *
+     * @param string $mimeType
+     *
+     * @return string
      */
     private function buildStoredName(string $mimeType): string
     {
@@ -160,6 +200,11 @@ final class FileStorage
 
     /**
      * Persists an uploaded file at the resolved storage path.
+     *
+     * @param UploadedFile $file
+     * @param string $path
+     *
+     * @return void
      */
     private function saveFile(UploadedFile $file, string $path): void
     {

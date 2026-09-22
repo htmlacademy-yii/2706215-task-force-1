@@ -11,6 +11,11 @@ final readonly class TaskFilterDto
 {
     /**
      * Initializes task list filters.
+     *
+     * @param array $categories
+     * @param bool $isRemote
+     * @param bool $hasNoBid
+     * @param ?int $createdAfter
      */
     public function __construct(
         public array $categories = [],

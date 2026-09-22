@@ -30,6 +30,8 @@ class TaskCreateForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -79,6 +81,8 @@ class TaskCreateForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -95,6 +99,8 @@ class TaskCreateForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function formName(): string
     {
@@ -103,6 +109,8 @@ class TaskCreateForm extends Model
 
     /**
      * Converts validated request data to a DTO.
+     *
+     * @return TaskCreateDto
      */
     public function toDto(): TaskCreateDto
     {

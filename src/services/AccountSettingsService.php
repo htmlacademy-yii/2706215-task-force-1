@@ -23,6 +23,9 @@ final class AccountSettingsService
 {
     /**
      * Creates the account settings service.
+     *
+     * @param FileStorage $fileStorage
+     * @param AvatarUrlResolver $avatarUrlResolver
      */
     public function __construct(
         private readonly FileStorage $fileStorage,
@@ -31,6 +34,12 @@ final class AccountSettingsService
 
     /**
      * Updates profile data, avatar, and executor specializations.
+     *
+     * @param User $user
+     * @param AccountProfileDto $dto
+     * @param ?UploadedFile $avatarFile
+     *
+     * @return void
      *
      * @throws AccountSettingsException
      */
@@ -104,6 +113,11 @@ final class AccountSettingsService
     /**
      * Updates the password and contact visibility.
      *
+     * @param User $user
+     * @param AccountSecurityDto $dto
+     *
+     * @return void
+     *
      * @throws AccountSettingsException
      */
     public function updateSecurity(User $user, AccountSecurityDto $dto): void
@@ -147,6 +161,13 @@ final class AccountSettingsService
 
     /**
      * Creates or updates executor-specific profile fields.
+     *
+     * @param User $user
+     * @param AccountProfileDto $dto
+     *
+     * @return void
+     *
+     * @throws AccountSettingsException
      */
     private function updateExecutorProfile(User $user, AccountProfileDto $dto): void
     {
@@ -168,7 +189,12 @@ final class AccountSettingsService
     /**
      * Synchronizes executor specializations with selected categories.
      *
+     * @param int $userId
      * @param list<int> $categoryIds
+     *
+     * @return void
+     *
+     * @throws AccountSettingsException
      */
     private function syncSpecializations(int $userId, array $categoryIds): void
     {
@@ -203,6 +229,10 @@ final class AccountSettingsService
 
     /**
      * Removes a local avatar without masking the completed settings update.
+     *
+     * @param string $avatar
+     *
+     * @return void
      */
     private function removeAvatarSafely(string $avatar): void
     {

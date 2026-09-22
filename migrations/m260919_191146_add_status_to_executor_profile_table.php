@@ -11,6 +11,8 @@ class m260919_191146_add_status_to_executor_profile_table extends Migration
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function safeUp()
     {
@@ -29,6 +31,8 @@ class m260919_191146_add_status_to_executor_profile_table extends Migration
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function safeDown()
     {

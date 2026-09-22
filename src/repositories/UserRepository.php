@@ -13,6 +13,10 @@ final class UserRepository
 {
     /**
      * Finds the current user with relations required by account settings.
+     *
+     * @param int $id
+     *
+     * @return ?User
      */
     public function findForSettings(int $id): ?User
     {
@@ -24,6 +28,10 @@ final class UserRepository
 
     /**
      * Finds a user by ID.
+     *
+     * @param int $id
+     *
+     * @return ?User
      */
     public function findById(int $id): ?User
     {
@@ -32,6 +40,10 @@ final class UserRepository
 
     /**
      * Finds a user by their permanent GitHub account ID.
+     *
+     * @param int $githubId
+     *
+     * @return ?User
      */
     public function findByGithubId(int $githubId): ?User
     {
@@ -40,6 +52,10 @@ final class UserRepository
 
     /**
      * Finds a user by email.
+     *
+     * @param string $email
+     *
+     * @return ?User
      */
     public function findByEmail(string $email): ?User
     {
@@ -48,6 +64,10 @@ final class UserRepository
 
     /**
      * Finds an executor by ID with profile data.
+     *
+     * @param int $id
+     *
+     * @return ?User
      */
     public function findExecutorById(int $id): ?User
     {

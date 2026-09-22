@@ -19,6 +19,8 @@ enum BidStatus: string
 
     /**
      * Returns the localized bid status label.
+     *
+     * @return string
      */
     public function label(): string
     {

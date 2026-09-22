@@ -24,6 +24,8 @@ class Attachment extends ActiveRecord
 {
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public static function tableName(): string
     {
@@ -32,6 +34,8 @@ class Attachment extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -46,6 +50,8 @@ class Attachment extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -62,6 +68,8 @@ class Attachment extends ActiveRecord
 
     /**
      * Gets the task this attachment belongs to.
+     *
+     * @return ActiveQuery
      */
     public function getTask(): ActiveQuery
     {

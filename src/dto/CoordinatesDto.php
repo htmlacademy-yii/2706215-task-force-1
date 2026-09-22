@@ -11,6 +11,9 @@ final readonly class CoordinatesDto
 {
     /**
      * Initializes geographic coordinates.
+     *
+     * @param float $latitude
+     * @param float $longitude
      */
     public function __construct(
         public float $latitude,

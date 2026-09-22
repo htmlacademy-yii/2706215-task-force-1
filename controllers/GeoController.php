@@ -17,6 +17,11 @@ final class GeoController extends AuthorizedController
 {
     /**
      * Creates the geocoding controller.
+     *
+     * @param mixed $id
+     * @param mixed $module
+     * @param GeocoderInterface $geocoder
+     * @param array $config
      */
     public function __construct(
         mixed $id,
@@ -29,6 +34,8 @@ final class GeoController extends AuthorizedController
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function behaviors(): array
     {
@@ -43,6 +50,8 @@ final class GeoController extends AuthorizedController
 
     /**
      * Returns address, latitude, and longitude for the autocomplete field.
+     *
+     * @param string $query
      *
      * @return list<array{value: string, latitude: float, longitude: float}>
      */

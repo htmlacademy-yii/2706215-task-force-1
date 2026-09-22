@@ -16,6 +16,8 @@ final class TaskCompleteForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -29,6 +31,8 @@ final class TaskCompleteForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -40,6 +44,8 @@ final class TaskCompleteForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function formName(): string
     {

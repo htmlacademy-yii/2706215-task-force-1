@@ -14,6 +14,9 @@ final readonly class ActorContext
     /**
      * Creates an actor context.
      *
+     * @param int $id
+     * @param bool $isExecutor
+     *
      * @throws InvalidArgumentException
      */
     public function __construct(
@@ -30,6 +33,8 @@ final readonly class ActorContext
 
     /**
      * Returns the actor identifier.
+     *
+     * @return int
      */
     public function getId(): int
     {
@@ -38,6 +43,8 @@ final readonly class ActorContext
 
     /**
      * Whether the actor can work as an executor.
+     *
+     * @return bool
      */
     public function getIsExecutor(): bool
     {

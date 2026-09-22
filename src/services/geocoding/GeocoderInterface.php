@@ -9,6 +9,8 @@ interface GeocoderInterface
     /**
      * Returns address variants for an autocomplete field.
      *
+     * @param string $query
+     *
      * @return list<array{value: string, latitude: float, longitude: float}>
      *
      * @throws GeocodingException

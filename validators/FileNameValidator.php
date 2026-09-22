@@ -13,6 +13,11 @@ final class FileNameValidator extends Validator
 {
     /**
      * {@inheritdoc}
+     *
+     * @param mixed $model
+     * @param mixed $attribute
+     *
+     * @return void
      */
     public function validateAttribute($model, $attribute): void
     {

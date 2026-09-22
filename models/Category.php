@@ -23,6 +23,8 @@ class Category extends ActiveRecord
 {
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public static function tableName(): string
     {
@@ -31,6 +33,8 @@ class Category extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -45,6 +49,8 @@ class Category extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -57,6 +63,8 @@ class Category extends ActiveRecord
 
     /**
      * Gets executor specializations for this category.
+     *
+     * @return ActiveQuery
      */
     public function getExecutorSpecializations(): ActiveQuery
     {
@@ -65,6 +73,8 @@ class Category extends ActiveRecord
 
     /**
      * Gets tasks in this category.
+     *
+     * @return ActiveQuery
      */
     public function getTasks(): ActiveQuery
     {
@@ -73,6 +83,8 @@ class Category extends ActiveRecord
 
     /**
      * Gets users specialized in this category.
+     *
+     * @return ActiveQuery
      *
      * @throws InvalidConfigException
      */

@@ -26,6 +26,8 @@ class Review extends ActiveRecord
 {
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public static function tableName(): string
     {
@@ -34,6 +36,8 @@ class Review extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -56,6 +60,8 @@ class Review extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -72,6 +78,8 @@ class Review extends ActiveRecord
 
     /**
      * Returns the customer who created the review.
+     *
+     * @return ActiveQuery
      */
     public function getCustomer(): ActiveQuery
     {
@@ -80,6 +88,8 @@ class Review extends ActiveRecord
 
     /**
      * Returns the executor being reviewed.
+     *
+     * @return ActiveQuery
      */
     public function getExecutor(): ActiveQuery
     {
@@ -88,6 +98,8 @@ class Review extends ActiveRecord
 
     /**
      * Returns the task associated with this review.
+     *
+     * @return ActiveQuery
      */
     public function getTask(): ActiveQuery
     {

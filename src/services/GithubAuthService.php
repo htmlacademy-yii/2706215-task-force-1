@@ -18,6 +18,8 @@ final class GithubAuthService
 {
     /**
      * Creates the GitHub authentication service.
+     *
+     * @param UserRepository $userRepository
      */
     public function __construct(
         private readonly UserRepository $userRepository,
@@ -25,6 +27,10 @@ final class GithubAuthService
 
     /**
      * Returns a user identified by the permanent GitHub account ID.
+     *
+     * @param ClientInterface $client
+     *
+     * @return User
      *
      * @throws GithubAuthException
      */
@@ -99,7 +105,12 @@ final class GithubAuthService
     }
 
     /**
+    /**
+     * Extracts and validates the permanent GitHub account ID.
+     *
      * @param array<string, mixed> $attributes
+     *
+     * @return int
      *
      * @throws GithubAuthException
      */
@@ -119,7 +130,11 @@ final class GithubAuthService
     }
 
     /**
+     * Extracts and validates the email returned by GitHub.
+     *
      * @param array<string, mixed> $attributes
+     *
+     * @return string
      *
      * @throws GithubAuthException
      */
@@ -137,7 +152,13 @@ final class GithubAuthService
     }
 
     /**
+     * Registers a GitHub user or links an existing user with the same email.
+     *
+     * @param int $githubId
+     * @param string $email
      * @param array<string, mixed> $attributes
+     *
+     * @return User
      *
      * @throws GithubAuthException
      */

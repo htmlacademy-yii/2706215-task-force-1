@@ -9,6 +9,8 @@ class m260919_191128_add_comment_to_bid_table extends Migration
 {
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function safeUp()
     {
@@ -21,6 +23,8 @@ class m260919_191128_add_comment_to_bid_table extends Migration
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function safeDown()
     {

@@ -18,6 +18,8 @@ class UserController extends AuthorizedController
 {
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function behaviors(): array
     {
@@ -41,6 +43,14 @@ class UserController extends AuthorizedController
 
     /**
      * {@inheritdoc}
+     *
+     * @param mixed $id
+     * @param mixed $module
+     * @param UserRepository $userRepository
+     * @param CityRepository $cityRepository
+     * @param UserService $userService
+     * @param TaskRepository $taskRepository
+     * @param array $config
      */
     public function __construct(
         mixed $id,
@@ -56,6 +66,10 @@ class UserController extends AuthorizedController
 
     /**
      * Displays a single User model.
+     *
+     * @param int $id
+     *
+     * @return string
      *
      * @throws NotFoundHttpException
      */
@@ -84,6 +98,8 @@ class UserController extends AuthorizedController
 
     /**
      * Registers a new user.
+     *
+     * @return Response|string
      *
      * @throws UserSignupException
      */

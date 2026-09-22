@@ -11,6 +11,16 @@ final readonly class TaskCreateDto
 {
     /**
      * Initializes the data required to create a task.
+     *
+     * @param int $categoryId
+     * @param string $title
+     * @param string $description
+     * @param int $budget
+     * @param string $expireDate
+     * @param ?string $location
+     * @param ?int $cityId
+     * @param ?float $latitude
+     * @param ?float $longitude
      */
     public function __construct(
         public int $categoryId,

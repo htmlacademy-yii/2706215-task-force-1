@@ -20,6 +20,8 @@ final class RatingInputWidget extends InputWidget
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function run(): string
     {

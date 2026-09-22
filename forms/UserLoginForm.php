@@ -17,6 +17,8 @@ class UserLoginForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -32,6 +34,8 @@ class UserLoginForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -43,6 +47,8 @@ class UserLoginForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function formName(): string
     {
@@ -51,6 +57,8 @@ class UserLoginForm extends Model
 
     /**
      * Converts validated request data to a DTO.
+     *
+     * @return UserLoginDto
      */
     public function toDto(): UserLoginDto
     {

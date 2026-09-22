@@ -21,6 +21,8 @@ enum TaskStatus: string
 
     /**
      * Returns the localized status label.
+     *
+     * @return string
      */
     public function label(): string
     {

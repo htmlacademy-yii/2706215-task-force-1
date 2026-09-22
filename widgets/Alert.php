@@ -26,6 +26,8 @@ class Alert extends Widget
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function run(): void
     {

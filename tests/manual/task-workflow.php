@@ -15,6 +15,9 @@ require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
  * Asserts that a callback throws a task action exception.
  *
  * @param callable(): void $callback
+ * @param string $message
+ *
+ * @return void
  */
 function assertTaskActionException(callable $callback, string $message): void
 {

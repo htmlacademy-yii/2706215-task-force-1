@@ -11,6 +11,12 @@ final readonly class UserSignupDto
 {
     /**
      * Initializes user registration data.
+     *
+     * @param string $name
+     * @param string $email
+     * @param string $password
+     * @param ?int $cityId
+     * @param bool $isExecutor
      */
     public function __construct(
         public string $name,

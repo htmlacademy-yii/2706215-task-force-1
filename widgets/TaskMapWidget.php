@@ -22,6 +22,8 @@ final class TaskMapWidget extends Widget
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function run(): string
     {
@@ -48,6 +50,11 @@ final class TaskMapWidget extends Widget
 
     /**
      * Registers the Yandex Maps API and initializes the map.
+     *
+     * @param string $mapId
+     * @param string $apiKey
+     *
+     * @return void
      */
     private function registerMap(string $mapId, string $apiKey): void
     {

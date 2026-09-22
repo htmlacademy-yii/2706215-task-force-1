@@ -12,6 +12,12 @@ final readonly class AccountProfileDto
     /**
      * Initializes account profile data.
      *
+     * @param string $name
+     * @param string $email
+     * @param ?string $birthday
+     * @param ?string $phone
+     * @param ?string $telegram
+     * @param ?string $about
      * @param list<int> $categoryIds
      */
     public function __construct(

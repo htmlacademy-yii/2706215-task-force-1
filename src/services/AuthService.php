@@ -16,6 +16,9 @@ final class AuthService
 {
     /**
      * Creates the authentication service.
+     *
+     * @param UserRepository $userRepository
+     * @param Security $security
      */
     public function __construct(
         private readonly UserRepository $userRepository,
@@ -24,6 +27,10 @@ final class AuthService
 
     /**
      * Returns the user when the supplied credentials are valid.
+     *
+     * @param UserLoginDto $dto
+     *
+     * @return ?User
      */
     public function authenticate(UserLoginDto $dto): ?User
     {

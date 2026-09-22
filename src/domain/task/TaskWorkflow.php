@@ -39,6 +39,9 @@ final readonly class TaskWorkflow
     /**
      * Returns actions allowed by both the current task state and the actor.
      *
+     * @param TaskContext $task
+     * @param ActorContext $actor
+     *
      * @return list<TaskAction>
      */
     public function getAvailablePageActions(
@@ -53,6 +56,12 @@ final readonly class TaskWorkflow
 
     /**
      * Checks whether the action is available to the actor in the current state.
+     *
+     * @param TaskContext $task
+     * @param TaskAction $action
+     * @param ActorContext $actor
+     *
+     * @return bool
      */
     public function isActionAvailable(
         TaskContext $task,
@@ -65,6 +74,12 @@ final readonly class TaskWorkflow
 
     /**
      * Performs an action when it is available to the actor.
+     *
+     * @param TaskContext $task
+     * @param TaskAction $action
+     * @param ActorContext $actor
+     *
+     * @return TaskContext
      *
      * @throws TaskActionException
      */
@@ -87,6 +102,12 @@ final readonly class TaskWorkflow
     /**
      * Starts a task and assigns its executor.
      *
+     * @param TaskContext $task
+     * @param ActorContext $actor
+     * @param int $executorId
+     *
+     * @return TaskContext
+     *
      * @throws TaskActionException
      */
     public function assignExecutor(
@@ -108,6 +129,10 @@ final readonly class TaskWorkflow
 
     /**
      * Returns the status reached after the action.
+     *
+     * @param TaskAction $action
+     *
+     * @return ?TaskStatus
      */
     public function getNextStatus(TaskAction $action): ?TaskStatus
     {
@@ -121,6 +146,10 @@ final readonly class TaskWorkflow
     }
 
     /**
+     * Returns actions available for the specified task status.
+     *
+     * @param TaskStatus $status
+     *
      * @return list<TaskAction>
      */
     private function getActionsForStatus(TaskStatus $status): array
@@ -145,6 +174,8 @@ final readonly class TaskWorkflow
      * Returns actions represented by buttons on the task page.
      * Assignment is handled on a concrete bid instead.
      *
+     * @param TaskStatus $status
+     *
      * @return list<TaskAction>
      */
     private function getPageActionsForStatus(TaskStatus $status): array
@@ -157,6 +188,12 @@ final readonly class TaskWorkflow
 
     /**
      * Checks whether the actor satisfies action-specific rules.
+     *
+     * @param TaskAction $action
+     * @param TaskContext $task
+     * @param ActorContext $actor
+     *
+     * @return bool
      */
     private function isAllowedForActor(
         TaskAction $action,

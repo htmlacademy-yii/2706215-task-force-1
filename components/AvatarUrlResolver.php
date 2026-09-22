@@ -14,6 +14,10 @@ final class AvatarUrlResolver
 
     /**
      * Returns an external HTTPS URL, a local avatar URL, or the default avatar.
+     *
+     * @param ?string $avatar
+     *
+     * @return string
      */
     public function resolve(?string $avatar): string
     {
@@ -34,6 +38,10 @@ final class AvatarUrlResolver
 
     /**
      * Checks whether the value matches a locally stored avatar key.
+     *
+     * @param ?string $avatar
+     *
+     * @return bool
      */
     public function isLocalKey(?string $avatar): bool
     {

@@ -17,8 +17,12 @@ final class LocationCoordinatesValidator extends Validator
     public string $longitudeAttribute = 'longitude';
 
     /**
+     * {@inheritdoc}
+     *
      * @param Model $model
      * @param string $attribute
+     *
+     * @return void
      */
     public function validateAttribute($model, $attribute): void
     {

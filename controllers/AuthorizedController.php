@@ -17,6 +17,8 @@ abstract class AuthorizedController extends Controller
 {
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function behaviors(): array
     {
@@ -38,6 +40,8 @@ abstract class AuthorizedController extends Controller
 
     /**
      * Returns the authenticated application user.
+     *
+     * @return User
      *
      * @throws ForbiddenHttpException
      */

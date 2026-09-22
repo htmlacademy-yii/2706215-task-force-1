@@ -16,6 +16,8 @@ enum ExecutorStatus: string
 
     /**
      * Returns the localized availability label.
+     *
+     * @return string
      */
     public function label(): string
     {

@@ -16,6 +16,12 @@ use Yii;
 final class UserService
 {
     /**
+     * Registers a user and creates an executor profile when required.
+     *
+     * @param UserSignupDto $dto
+     *
+     * @return User
+     *
      * @throws UserSignupException
      */
     public function signup(UserSignupDto $dto): User

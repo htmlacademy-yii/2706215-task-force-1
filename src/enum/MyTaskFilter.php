@@ -17,6 +17,8 @@ enum MyTaskFilter: string
     /**
      * Returns filters available to the given role.
      *
+     * @param bool $isExecutor
+     *
      * @return list<self>
      */
     public static function availableFor(bool $isExecutor): array
@@ -30,6 +32,10 @@ enum MyTaskFilter: string
 
     /**
      * Returns the default filter for a user role.
+     *
+     * @param bool $isExecutor
+     *
+     * @return self
      */
     public static function defaultFor(bool $isExecutor): self
     {
@@ -38,6 +44,11 @@ enum MyTaskFilter: string
 
     /**
      * Resolves a permitted filter value with a safe role-specific fallback.
+     *
+     * @param ?string $value
+     * @param bool $isExecutor
+     *
+     * @return self
      */
     public static function fromRequest(?string $value, bool $isExecutor): self
     {
@@ -52,6 +63,8 @@ enum MyTaskFilter: string
 
     /**
      * Returns the short localized filter label.
+     *
+     * @return string
      */
     public function label(): string
     {
@@ -65,6 +78,8 @@ enum MyTaskFilter: string
 
     /**
      * Returns the page heading for the selected filter.
+     *
+     * @return string
      */
     public function heading(): string
     {

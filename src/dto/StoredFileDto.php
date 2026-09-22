@@ -11,6 +11,11 @@ final readonly class StoredFileDto
 {
     /**
      * Initializes stored file metadata.
+     *
+     * @param string $filePath
+     * @param string $originalName
+     * @param ?string $mimeType
+     * @param int $sizeBytes
      */
     public function __construct(
         public string $filePath,

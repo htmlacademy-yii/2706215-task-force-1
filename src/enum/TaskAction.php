@@ -21,6 +21,8 @@ enum TaskAction: string
 
     /**
      * Returns the human-readable action label.
+     *
+     * @return string
      */
     public function label(): string
     {

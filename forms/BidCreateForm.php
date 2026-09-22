@@ -16,6 +16,8 @@ final class BidCreateForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -30,6 +32,8 @@ final class BidCreateForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -41,6 +45,8 @@ final class BidCreateForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function formName(): string
     {

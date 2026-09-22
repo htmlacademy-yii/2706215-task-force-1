@@ -24,6 +24,8 @@ final class RatingWidget extends Widget
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function run(): string
     {
