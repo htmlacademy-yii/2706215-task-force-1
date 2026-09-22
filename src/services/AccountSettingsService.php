@@ -60,33 +60,7 @@ final class AccountSettingsService
                 )->filePath;
             }
 
-            $transaction = Yii::$app->db->beginTransaction();
-
-            try {
-                $user->name = $dto->name;
-                $user->email = $dto->email;
-                $user->birthday = $dto->birthday;
-
-                if ($newAvatar !== null) {
-                    $user->avatar = $newAvatar;
-                }
-
-                if (!$user->save(false)) {
-                    throw new AccountSettingsException(
-                        'Не удалось сохранить пользователя.',
-                    );
-                }
-
-                if ((bool) $user->is_executor) {
-                    $this->updateExecutorProfile($user, $dto);
-                    $this->syncSpecializations($user->id, $dto->categoryIds);
-                }
-
-                $transaction->commit();
-            } catch (Throwable $exception) {
-                $transaction->rollBack();
-                throw $exception;
-            }
+            $this->saveProfileInTransaction($user, $dto, $newAvatar);
         } catch (Throwable $exception) {
             if ($newAvatar !== null) {
                 $this->removeAvatarSafely($newAvatar);
@@ -107,6 +81,52 @@ final class AccountSettingsService
             && $this->avatarUrlResolver->isLocalKey($oldAvatar)
         ) {
             $this->removeAvatarSafely($oldAvatar);
+        }
+    }
+
+    /**
+     * Saves the user and executor-specific profile data atomically.
+     *
+     * @param User $user
+     * @param AccountProfileDto $dto
+     * @param ?string $newAvatar
+     *
+     * @return void
+     *
+     * @throws AccountSettingsException
+     */
+    private function saveProfileInTransaction(
+        User $user,
+        AccountProfileDto $dto,
+        ?string $newAvatar,
+    ): void {
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            $user->name = $dto->name;
+            $user->email = $dto->email;
+            $user->birthday = $dto->birthday;
+
+            if ($newAvatar !== null) {
+                $user->avatar = $newAvatar;
+            }
+
+            if (!$user->save(false)) {
+                throw new AccountSettingsException('Не удалось сохранить пользователя.');
+            }
+
+            if ((bool) $user->is_executor) {
+                $this->updateExecutorProfile($user, $dto);
+                $this->syncSpecializations($user->id, $dto->categoryIds);
+            }
+
+            $transaction->commit();
+        } catch (Throwable $exception) {
+            if ($transaction->isActive) {
+                $transaction->rollBack();
+            }
+
+            throw $exception;
         }
     }
 

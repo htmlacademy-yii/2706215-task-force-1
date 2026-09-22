@@ -50,23 +50,10 @@ final class GithubAuthService
         }
 
         $email = $this->extractEmail($attributes);
-        $transaction = User::getDb()->beginTransaction();
 
         try {
-            // The callback can be processed concurrently, so repeat the lookup
-            // after starting the transaction before creating or linking a user.
-            $user = $this->userRepository->findByGithubId($githubId);
-
-            if ($user === null) {
-                $user = $this->register($githubId, $email, $attributes);
-            }
-
-            $transaction->commit();
+            $this->findOrRegisterInTransaction($githubId, $email, $attributes);
         } catch (IntegrityException $exception) {
-            if ($transaction->isActive) {
-                $transaction->rollBack();
-            }
-
             // A concurrent callback may have saved the same GitHub ID first.
             $user = $this->userRepository->findByGithubId($githubId);
 
@@ -78,16 +65,8 @@ final class GithubAuthService
                 );
             }
         } catch (GithubAuthException $exception) {
-            if ($transaction->isActive) {
-                $transaction->rollBack();
-            }
-
             throw $exception;
         } catch (Throwable $exception) {
-            if ($transaction->isActive) {
-                $transaction->rollBack();
-            }
-
             throw new GithubAuthException(
                 'Не удалось выполнить вход через GitHub.',
                 0,
@@ -105,6 +84,43 @@ final class GithubAuthService
     }
 
     /**
+     * Finds or registers a GitHub user within a transaction.
+     *
+     * @param int $githubId
+     * @param string $email
+     * @param array<string, mixed> $attributes
+     *
+     * @return void
+     *
+     * @throws GithubAuthException
+     * @throws IntegrityException
+     */
+    private function findOrRegisterInTransaction(
+        int $githubId,
+        string $email,
+        array $attributes,
+    ): void {
+        $transaction = User::getDb()->beginTransaction();
+
+        try {
+            // The callback can be processed concurrently, so repeat the lookup
+            // after starting the transaction before creating or linking a user.
+            $user = $this->userRepository->findByGithubId($githubId);
+
+            if ($user === null) {
+                $this->register($githubId, $email, $attributes);
+            }
+
+            $transaction->commit();
+        } catch (Throwable $exception) {
+            if ($transaction->isActive) {
+                $transaction->rollBack();
+            }
+
+            throw $exception;
+        }
+    }
+
     /**
      * Extracts and validates the permanent GitHub account ID.
      *
@@ -167,34 +183,68 @@ final class GithubAuthService
         $user = $this->userRepository->findByEmail($email);
 
         if ($user !== null) {
-            if ($user->github_id !== null && (int) $user->github_id !== $githubId) {
-                throw new GithubAuthException(
-                    'Этот email уже связан с другим аккаунтом GitHub.',
-                );
-            }
-
-            $updatedRows = User::updateAll(
-                ['github_id' => $githubId],
-                ['id' => $user->id, 'github_id' => null],
-            );
-
-            if ($updatedRows !== 1) {
-                throw new GithubAuthException(
-                    'Не удалось связать аккаунт GitHub с пользователем.',
-                );
-            }
-
-            $linkedUser = $this->userRepository->findByGithubId($githubId);
-
-            if ($linkedUser === null) {
-                throw new GithubAuthException(
-                    'Пользователь не найден после привязки аккаунта GitHub.',
-                );
-            }
-
-            return $linkedUser;
+            return $this->linkGithubAccount($user, $githubId);
         }
 
+        return $this->createGithubUser($githubId, $email, $attributes);
+    }
+
+    /**
+     * Links an existing user to a GitHub account.
+     *
+     * @param User $user
+     * @param int $githubId
+     *
+     * @return User
+     *
+     * @throws GithubAuthException
+     */
+    private function linkGithubAccount(User $user, int $githubId): User
+    {
+        if ($user->github_id !== null && (int) $user->github_id !== $githubId) {
+            throw new GithubAuthException(
+                'Этот email уже связан с другим аккаунтом GitHub.',
+            );
+        }
+
+        $updatedRows = User::updateAll(
+            ['github_id' => $githubId],
+            ['id' => $user->id, 'github_id' => null],
+        );
+
+        if ($updatedRows !== 1) {
+            throw new GithubAuthException(
+                'Не удалось связать аккаунт GitHub с пользователем.',
+            );
+        }
+
+        $linkedUser = $this->userRepository->findByGithubId($githubId);
+
+        if ($linkedUser === null) {
+            throw new GithubAuthException(
+                'Пользователь не найден после привязки аккаунта GitHub.',
+            );
+        }
+
+        return $linkedUser;
+    }
+
+    /**
+     * Creates a user from GitHub account attributes.
+     *
+     * @param int $githubId
+     * @param string $email
+     * @param array<string, mixed> $attributes
+     *
+     * @return User
+     *
+     * @throws GithubAuthException
+     */
+    private function createGithubUser(
+        int $githubId,
+        string $email,
+        array $attributes,
+    ): User {
         $name = trim((string) ($attributes['name'] ?? ''));
 
         if ($name === '') {
