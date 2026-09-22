@@ -17,6 +17,7 @@ use yii\db\ActiveRecord;
  * @property string|null $telegram
  * @property string|null $about
  * @property int $hide_my_contacts
+ * @property string $status
  * @property string $created_at
  * @property string|null $updated_at
  *

@@ -4,29 +4,22 @@ parameters:
     paths:
         - src
         - assets
-        - commands
         - controllers
-        - mail
         - models
         - widgets
-        - tests/Acceptance
-        - tests/Functional
-        - tests/Unit
 
     scanDirectories:
-        - tests/Support
+        - components
+        - forms
+        - validators
 
     bootstrapFiles:
-        - tests/_bootstrap.php
+        - vendor/yiisoft/yii2/Yii.php
 
     dynamicConstantNames:
         - YII_DEBUG
         - YII_ENV
         - YII_ENV_DEV
         - YII_ENV_PROD
-        - YII_ENV_TEST
-
-    ignoreErrors:
-        - '#Unsafe usage of new static\(\).#'
 
     tmpDir: %currentWorkingDirectory%/runtime

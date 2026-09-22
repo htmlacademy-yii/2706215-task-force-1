@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace app\models;
 
 use Sanweb\Taskforce\enum\TaskStatus;
-use Sanweb\Taskforce\exception\MissingEnumLabelException;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -169,7 +168,7 @@ class Task extends ActiveRecord
     }
 
     /**
-     * @throws MissingEnumLabelException
+     * Returns the localized task status label.
      */
     public function getStatusLabel(): string
     {

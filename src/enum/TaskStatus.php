@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Sanweb\Taskforce\enum;
 
 use Sanweb\Taskforce\enum\trait\EnumValues;
-use Sanweb\Taskforce\exception\MissingEnumLabelException;
 
 /**
  * Task lifecycle statuses stored in the database.
@@ -31,9 +30,6 @@ enum TaskStatus: string
             self::InProgress => 'В работе',
             self::Completed => 'Выполнено',
             self::Failed => 'Провалено',
-            default => throw new MissingEnumLabelException(
-                "Отображаемое название для статуса {$this->value} не задано"
-            )
         };
     }
 }

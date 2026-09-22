@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Sanweb\Taskforce\enum;
 
 use Sanweb\Taskforce\enum\trait\EnumValues;
-use Sanweb\Taskforce\exception\MissingEnumLabelException;
 
 /**
  * Identifies an action supported by the task workflow.
@@ -31,9 +30,6 @@ enum TaskAction: string
             self::Assign => 'Назначить',
             self::Complete => 'Завершить',
             self::Refuse => 'Отказаться',
-            default => throw new MissingEnumLabelException(
-                "Отображаемое название для действия {$this->value} не задано"
-            )
         };
     }
 }
