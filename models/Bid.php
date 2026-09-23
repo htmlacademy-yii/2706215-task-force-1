@@ -27,6 +27,8 @@ class Bid extends ActiveRecord
 {
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public static function tableName(): string
     {
@@ -35,6 +37,8 @@ class Bid extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -56,6 +60,8 @@ class Bid extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -72,6 +78,8 @@ class Bid extends ActiveRecord
 
     /**
      * Gets the task this bid belongs to.
+     *
+     * @return ActiveQuery
      */
     public function getTask(): ActiveQuery
     {
@@ -80,6 +88,8 @@ class Bid extends ActiveRecord
 
     /**
      * Gets the user who submitted this bid.
+     *
+     * @return ActiveQuery
      */
     public function getUser(): ActiveQuery
     {

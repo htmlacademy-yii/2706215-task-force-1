@@ -23,6 +23,9 @@ final class AccountSettingsService
 {
     /**
      * Creates the account settings service.
+     *
+     * @param FileStorage $fileStorage
+     * @param AvatarUrlResolver $avatarUrlResolver
      */
     public function __construct(
         private readonly FileStorage $fileStorage,
@@ -31,6 +34,12 @@ final class AccountSettingsService
 
     /**
      * Updates profile data, avatar, and executor specializations.
+     *
+     * @param User $user
+     * @param AccountProfileDto $dto
+     * @param ?UploadedFile $avatarFile
+     *
+     * @return void
      *
      * @throws AccountSettingsException
      */
@@ -51,33 +60,7 @@ final class AccountSettingsService
                 )->filePath;
             }
 
-            $transaction = Yii::$app->db->beginTransaction();
-
-            try {
-                $user->name = $dto->name;
-                $user->email = $dto->email;
-                $user->birthday = $dto->birthday;
-
-                if ($newAvatar !== null) {
-                    $user->avatar = $newAvatar;
-                }
-
-                if (!$user->save(false)) {
-                    throw new AccountSettingsException(
-                        'Не удалось сохранить пользователя.',
-                    );
-                }
-
-                if ((bool) $user->is_executor) {
-                    $this->updateExecutorProfile($user, $dto);
-                    $this->syncSpecializations($user->id, $dto->categoryIds);
-                }
-
-                $transaction->commit();
-            } catch (Throwable $exception) {
-                $transaction->rollBack();
-                throw $exception;
-            }
+            $this->saveProfileInTransaction($user, $dto, $newAvatar);
         } catch (Throwable $exception) {
             if ($newAvatar !== null) {
                 $this->removeAvatarSafely($newAvatar);
@@ -102,7 +85,58 @@ final class AccountSettingsService
     }
 
     /**
+     * Saves the user and executor-specific profile data atomically.
+     *
+     * @param User $user
+     * @param AccountProfileDto $dto
+     * @param ?string $newAvatar
+     *
+     * @return void
+     *
+     * @throws AccountSettingsException
+     */
+    private function saveProfileInTransaction(
+        User $user,
+        AccountProfileDto $dto,
+        ?string $newAvatar,
+    ): void {
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            $user->name = $dto->name;
+            $user->email = $dto->email;
+            $user->birthday = $dto->birthday;
+
+            if ($newAvatar !== null) {
+                $user->avatar = $newAvatar;
+            }
+
+            if (!$user->save(false)) {
+                throw new AccountSettingsException('Не удалось сохранить пользователя.');
+            }
+
+            if ((bool) $user->is_executor) {
+                $this->updateExecutorProfile($user, $dto);
+                $this->syncSpecializations($user->id, $dto->categoryIds);
+            }
+
+            $transaction->commit();
+        } catch (Throwable $exception) {
+            if ($transaction->isActive) {
+                $transaction->rollBack();
+            }
+
+            throw $exception;
+        }
+    }
+
+    /**
      * Updates the password and contact visibility.
+     *
+     * @param User $user
+     * @param AccountSecurityDto $dto
+     *
+     * @return void
      *
      * @throws AccountSettingsException
      */
@@ -147,6 +181,13 @@ final class AccountSettingsService
 
     /**
      * Creates or updates executor-specific profile fields.
+     *
+     * @param User $user
+     * @param AccountProfileDto $dto
+     *
+     * @return void
+     *
+     * @throws AccountSettingsException
      */
     private function updateExecutorProfile(User $user, AccountProfileDto $dto): void
     {
@@ -168,7 +209,12 @@ final class AccountSettingsService
     /**
      * Synchronizes executor specializations with selected categories.
      *
+     * @param int $userId
      * @param list<int> $categoryIds
+     *
+     * @return void
+     *
+     * @throws AccountSettingsException
      */
     private function syncSpecializations(int $userId, array $categoryIds): void
     {
@@ -203,6 +249,10 @@ final class AccountSettingsService
 
     /**
      * Removes a local avatar without masking the completed settings update.
+     *
+     * @param string $avatar
+     *
+     * @return void
      */
     private function removeAvatarSafely(string $avatar): void
     {

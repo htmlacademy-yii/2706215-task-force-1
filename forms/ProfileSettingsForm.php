@@ -34,6 +34,9 @@ final class ProfileSettingsForm extends Model
 
     /**
      * Initializes profile fields from the current user.
+     *
+     * @param User $user
+     * @param array $config
      */
     public function __construct(User $user, array $config = [])
     {
@@ -61,6 +64,8 @@ final class ProfileSettingsForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -128,6 +133,8 @@ final class ProfileSettingsForm extends Model
 
     /**
      * Checks whether executor-specific profile fields are available.
+     *
+     * @return bool
      */
     public function isExecutor(): bool
     {
@@ -136,6 +143,8 @@ final class ProfileSettingsForm extends Model
 
     /**
      * Converts validated profile data to a DTO.
+     *
+     * @return AccountProfileDto
      */
     public function toDto(): AccountProfileDto
     {
@@ -161,6 +170,8 @@ final class ProfileSettingsForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -178,6 +189,10 @@ final class ProfileSettingsForm extends Model
 
     /**
      * Converts a stored birthday to the profile form format.
+     *
+     * @param ?string $birthday
+     *
+     * @return string
      */
     private function formatBirthday(?string $birthday): string
     {

@@ -21,6 +21,11 @@ final class TaskRepository
     /**
      * Builds a query for tasks belonging to the current user's role context.
      *
+     * @param int $userId
+     * @param bool $isExecutor
+     * @param MyTaskFilter $filter
+     * @param ?DateTimeImmutable $today
+     *
      * @return ActiveQuery<Task>
      */
     public function findMyTasksQuery(
@@ -71,6 +76,8 @@ final class TaskRepository
     /**
      * Builds a query for new tasks matching the filter.
      *
+     * @param TaskFilterDto $filter
+     *
      * @return ActiveQuery<Task>
      */
     public function findNewQuery(TaskFilterDto $filter): ActiveQuery
@@ -99,6 +106,10 @@ final class TaskRepository
 
     /**
      * Finds a task by ID.
+     *
+     * @param int $id
+     *
+     * @return ?Task
      */
     public function findById(int $id): ?Task
     {
@@ -107,6 +118,11 @@ final class TaskRepository
 
     /**
      * Finds a task with the data required by the task details page.
+     *
+     * @param int $id
+     * @param int $viewerId
+     *
+     * @return ?Task
      */
     public function findDetailsById(int $id, int $viewerId): ?Task
     {
@@ -138,6 +154,10 @@ final class TaskRepository
 
     /**
      * Finds a task attachment by ID.
+     *
+     * @param int $id
+     *
+     * @return ?Attachment
      */
     public function findAttachmentById(int $id): ?Attachment
     {
@@ -146,6 +166,10 @@ final class TaskRepository
 
     /**
      * Finds a bid by ID with its author.
+     *
+     * @param int $id
+     *
+     * @return ?Bid
      */
     public function findBidById(int $id): ?Bid
     {
@@ -157,6 +181,11 @@ final class TaskRepository
 
     /**
      * Checks for an active task assigned to the executor by the customer.
+     *
+     * @param int $customerId
+     * @param int $executorId
+     *
+     * @return bool
      */
     public function hasActiveTaskWithExecutor(int $customerId, int $executorId): bool
     {

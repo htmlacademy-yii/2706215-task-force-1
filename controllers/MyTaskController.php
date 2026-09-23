@@ -16,6 +16,11 @@ class MyTaskController extends AuthorizedController
 {
     /**
      * {@inheritdoc}
+     *
+     * @param mixed $id
+     * @param mixed $module
+     * @param TaskRepository $taskRepository
+     * @param array $config
      */
     public function __construct(
         mixed $id,
@@ -28,6 +33,8 @@ class MyTaskController extends AuthorizedController
 
     /**
      * Displays tasks created by or bid on by the current user.
+     *
+     * @return string
      */
     public function actionIndex(): string
     {

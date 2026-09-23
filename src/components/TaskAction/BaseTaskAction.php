@@ -15,6 +15,8 @@ abstract class BaseTaskAction
 {
     /**
      * Returns the string identifier of the action.
+     *
+     * @return string
      */
     public function getName(): string
     {
@@ -23,6 +25,8 @@ abstract class BaseTaskAction
 
     /**
      * Returns the human-readable action label.
+     *
+     * @return string
      */
     public function getLabel(): string
     {
@@ -31,11 +35,18 @@ abstract class BaseTaskAction
 
     /**
      * Returns the action type.
+     *
+     * @return TaskAction
      */
     abstract public function getAction(): TaskAction;
 
     /**
      * Checks whether the action is allowed for the user.
+     *
+     * @param TaskContext $task
+     * @param ActorContext $actor
+     *
+     * @return bool
      */
     abstract public function isAllowed(TaskContext $task, ActorContext $actor): bool;
 }

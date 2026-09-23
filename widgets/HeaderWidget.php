@@ -16,6 +16,8 @@ final class HeaderWidget extends Widget
 {
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function run(): string
     {

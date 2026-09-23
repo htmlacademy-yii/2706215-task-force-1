@@ -21,6 +21,12 @@ class SiteController extends Controller
 {
     /**
      * {@inheritdoc}
+     *
+     * @param mixed $id
+     * @param mixed $module
+     * @param AuthService $authService
+     * @param GithubAuthService $githubAuthService
+     * @param array $config
      */
     public function __construct(
         mixed $id,
@@ -34,6 +40,8 @@ class SiteController extends Controller
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function behaviors(): array
     {
@@ -60,6 +68,8 @@ class SiteController extends Controller
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function actions(): array
     {
@@ -77,6 +87,10 @@ class SiteController extends Controller
 
     /**
      * Logs in a user after a successful GitHub OAuth callback.
+     *
+     * @param ClientInterface $client
+     *
+     * @return void
      */
     public function onAuthSuccess(ClientInterface $client): void
     {
@@ -101,6 +115,10 @@ class SiteController extends Controller
 
     /**
      * Handles a user-cancelled GitHub OAuth flow.
+     *
+     * @param ClientInterface $client
+     *
+     * @return void
      */
     public function onAuthCancel(ClientInterface $client): void
     {
@@ -176,6 +194,8 @@ class SiteController extends Controller
 
     /**
      * Whether GitHub authentication is configured for the interface.
+     *
+     * @return bool
      */
     private function isGithubAuthEnabled(): bool
     {

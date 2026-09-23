@@ -9,6 +9,8 @@ class m260919_191154_add_github_id_to_user_table extends Migration
 {
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function safeUp()
     {
@@ -28,6 +30,8 @@ class m260919_191154_add_github_id_to_user_table extends Migration
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function safeDown()
     {

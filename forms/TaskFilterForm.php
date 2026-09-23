@@ -28,6 +28,8 @@ class TaskFilterForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -45,6 +47,8 @@ class TaskFilterForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -58,6 +62,8 @@ class TaskFilterForm extends Model
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public function formName(): string
     {
@@ -66,6 +72,8 @@ class TaskFilterForm extends Model
 
     /**
      * Converts validated request data to a DTO.
+     *
+     * @return TaskFilterDto
      */
     public function toDto(): TaskFilterDto
     {

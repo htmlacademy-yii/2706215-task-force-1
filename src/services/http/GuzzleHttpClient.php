@@ -17,6 +17,10 @@ final class GuzzleHttpClient implements HttpClientInterface
 
     /**
      * Creates an HTTP client with request timeouts.
+     *
+     * @param ?ClientInterface $client
+     * @param float $connectTimeout
+     * @param float $timeout
      */
     public function __construct(
         ?ClientInterface $client = null,
@@ -28,6 +32,11 @@ final class GuzzleHttpClient implements HttpClientInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param string $url
+     * @param array $query
+     *
+     * @return string
      */
     public function get(string $url, array $query = []): string
     {

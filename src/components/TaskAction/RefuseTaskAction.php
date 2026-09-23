@@ -16,6 +16,8 @@ final class RefuseTaskAction extends BaseTaskAction
 {
     /**
      * {@inheritdoc}
+     *
+     * @return TaskAction
      */
     #[Override]
     public function getAction(): TaskAction
@@ -25,6 +27,11 @@ final class RefuseTaskAction extends BaseTaskAction
 
     /**
      * {@inheritdoc}
+     *
+     * @param TaskContext $task
+     * @param ActorContext $actor
+     *
+     * @return bool
      */
     #[Override]
     public function isAllowed(TaskContext $task, ActorContext $actor): bool

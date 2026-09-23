@@ -10,6 +10,8 @@ namespace Sanweb\Taskforce\enum\trait;
 trait EnumValues
 {
     /**
+     * Returns scalar values of all enum cases.
+     *
      * @return list<int|string>
      */
     public static function values(): array

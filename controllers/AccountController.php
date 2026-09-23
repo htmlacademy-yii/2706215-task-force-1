@@ -28,6 +28,14 @@ class AccountController extends AuthorizedController
 
     /**
      * {@inheritdoc}
+     *
+     * @param mixed $id
+     * @param mixed $module
+     * @param UserRepository $userRepository
+     * @param CategoryRepository $categoryRepository
+     * @param AccountSettingsService $accountSettingsService
+     * @param AvatarUrlResolver $avatarUrlResolver
+     * @param array $config
      */
     public function __construct(
         mixed $id,
@@ -43,6 +51,8 @@ class AccountController extends AuthorizedController
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function behaviors(): array
     {
@@ -62,6 +72,8 @@ class AccountController extends AuthorizedController
     /**
      * Displays settings for the authenticated user.
      *
+     * @return string
+     *
      * @throws NotFoundHttpException
      */
     public function actionSettings(): string
@@ -74,6 +86,8 @@ class AccountController extends AuthorizedController
 
     /**
      * Updates profile settings.
+     *
+     * @return Response|string
      *
      * @throws NotFoundHttpException
      */
@@ -133,6 +147,8 @@ class AccountController extends AuthorizedController
     /**
      * Updates security settings.
      *
+     * @return Response|string
+     *
      * @throws NotFoundHttpException
      */
     public function actionUpdateSecurity(): Response|string
@@ -190,6 +206,8 @@ class AccountController extends AuthorizedController
     /**
      * Returns the authenticated user with settings relations.
      *
+     * @return User
+     *
      * @throws NotFoundHttpException
      */
     private function findCurrentUser(): User
@@ -207,6 +225,8 @@ class AccountController extends AuthorizedController
     /**
      * Creates profile and security forms for the settings page.
      *
+     * @param User $user
+     *
      * @return array{ProfileSettingsForm, SecuritySettingsForm}
      */
     private function createSettingsForms(User $user): array
@@ -219,6 +239,13 @@ class AccountController extends AuthorizedController
 
     /**
      * Renders the settings page.
+     *
+     * @param User $user
+     * @param ProfileSettingsForm $profileForm
+     * @param SecuritySettingsForm $securityForm
+     * @param string $activeSection
+     *
+     * @return string
      */
     private function renderSettings(
         User $user,

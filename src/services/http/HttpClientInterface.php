@@ -9,7 +9,10 @@ interface HttpClientInterface
     /**
      * Sends a GET request and returns its response body.
      *
+     * @param string $url
      * @param array<string, scalar> $query
+     *
+     * @return string
      *
      * @throws HttpClientException
      */

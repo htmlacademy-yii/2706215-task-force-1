@@ -18,6 +18,10 @@ final class YandexGeocoder implements GeocoderInterface
 
     /**
      * Creates a Yandex geocoder client.
+     *
+     * @param HttpClientInterface $httpClient
+     * @param string $apiKey
+     * @param string $endpoint
      */
     public function __construct(
         private readonly HttpClientInterface $httpClient,
@@ -27,6 +31,8 @@ final class YandexGeocoder implements GeocoderInterface
 
     /**
      * Returns address variants suitable for an autocomplete field.
+     *
+     * @param string $query
      *
      * @return list<array{value: string, latitude: float, longitude: float}>
      *
@@ -65,6 +71,8 @@ final class YandexGeocoder implements GeocoderInterface
     /**
      * Sends a request to the geocoder and decodes its response.
      *
+     * @param string $query
+     *
      * @return array<string, mixed>
      */
     private function request(string $query): array
@@ -94,6 +102,10 @@ final class YandexGeocoder implements GeocoderInterface
 
     /**
      * Converts a Yandex longitude-latitude string into coordinates.
+     *
+     * @param mixed $position
+     *
+     * @return ?CoordinatesDto
      */
     private function parsePosition(mixed $position): ?CoordinatesDto
     {

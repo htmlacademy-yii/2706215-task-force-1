@@ -23,6 +23,9 @@ final class CsvToSqlConverter
     ];
 
     /**
+     * Creates a converter for the specified CSV file.
+     *
+     * @param string $file
      * @param array{delimiter?: string, enclosure?: string, escape?: string} $options
      */
     public function __construct(
@@ -38,6 +41,10 @@ final class CsvToSqlConverter
 
     /**
      * Validates the input file.
+     *
+     * @param string $file
+     *
+     * @return void
      */
     private function validateFile(string $file): void
     {
@@ -56,6 +63,10 @@ final class CsvToSqlConverter
 
     /**
      * Creates and configures the CSV reader.
+     *
+     * @param string $file
+     *
+     * @return SplFileObject
      */
     private function createReader(string $file): SplFileObject
     {
@@ -79,6 +90,10 @@ final class CsvToSqlConverter
 
     /**
      * Checks whether the file uses UTF-8.
+     *
+     * @param string $file
+     *
+     * @return bool
      */
     private function isUtf8(string $file): bool
     {
@@ -119,7 +134,11 @@ final class CsvToSqlConverter
     }
 
     /**
+     * Checks whether a CSV row contains no values.
+     *
      * @param array<int, string|null> $row
+     *
+     * @return bool
      */
     private function isEmptyRow(array $row): bool
     {
@@ -133,6 +152,8 @@ final class CsvToSqlConverter
     }
 
     /**
+     * Removes a UTF-8 BOM from the first value of a CSV row.
+     *
      * @param array<int, string|null> $row
      *
      * @return array<int, string|null>
@@ -152,7 +173,11 @@ final class CsvToSqlConverter
     /**
      * Converts selected CSV columns to a SQL INSERT file.
      *
+     * @param string $outputFile
+     * @param string $table
      * @param array<string, string> $fields CSV columns mapped to SQL columns.
+     *
+     * @return void
      */
     public function convert(
         string $outputFile,
@@ -204,7 +229,12 @@ final class CsvToSqlConverter
     }
 
     /**
+     * Validates the target table and field mapping.
+     *
+     * @param string $table
      * @param array<string, string> $fields
+     *
+     * @return void
      */
     private function validateConversionParameters(
         string $table,
@@ -227,6 +257,10 @@ final class CsvToSqlConverter
 
     /**
      * Ensures a table or column name is a safe SQL identifier.
+     *
+     * @param string $identifier
+     *
+     * @return void
      */
     private function validateIdentifier(string $identifier): void
     {
@@ -289,6 +323,10 @@ final class CsvToSqlConverter
 
     /**
      * Converts a CSV value to a SQL literal.
+     *
+     * @param ?string $value
+     *
+     * @return string
      */
     private function quoteValue(?string $value): string
     {

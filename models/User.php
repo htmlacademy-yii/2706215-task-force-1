@@ -43,6 +43,10 @@ class User extends ActiveRecord implements IdentityInterface
 {
     /**
      * Stores a secure hash of the given plain-text password.
+     *
+     * @param string $plainPassword
+     *
+     * @return void
      */
     public function setPassword(string $plainPassword): void
     {
@@ -51,6 +55,10 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param mixed $id
+     *
+     * @return ?static
      */
     public static function findIdentity($id): ?static
     {
@@ -59,15 +67,21 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param mixed $token
+     * @param mixed $type
+     *
+     * @return ?static
      */
     public static function findIdentityByAccessToken($token, $type = null): ?static
     {
-        // return static::findOne(['access_token' => $token]);
         return null;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return int|string
      */
     public function getId(): int|string
     {
@@ -76,6 +90,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return ?string
      */
     public function getAuthKey(): ?string
     {
@@ -84,6 +100,10 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @param mixed $authKey
+     *
+     * @return bool
      */
     public function validateAuthKey($authKey): bool
     {
@@ -92,6 +112,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public static function tableName(): string
     {
@@ -100,6 +122,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -129,6 +153,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -149,6 +175,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Gets bids submitted by this user.
+     *
+     * @return ActiveQuery
      */
     public function getBids(): ActiveQuery
     {
@@ -157,6 +185,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Gets categories this user specializes in.
+     *
+     * @return ActiveQuery
      *
      * @throws InvalidConfigException
      */
@@ -170,6 +200,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Gets the user's city.
+     *
+     * @return ActiveQuery
      */
     public function getCity(): ActiveQuery
     {
@@ -178,6 +210,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Gets the user's executor profile.
+     *
+     * @return ActiveQuery
      */
     public function getExecutorProfile(): ActiveQuery
     {
@@ -186,6 +220,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Gets the user's executor specializations.
+     *
+     * @return ActiveQuery
      */
     public function getExecutorSpecializations(): ActiveQuery
     {
@@ -194,6 +230,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Gets the executor statistics.
+     *
+     * @return ActiveQuery
      */
     public function getExecutorStats(): ActiveQuery
     {
@@ -202,6 +240,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Gets reviews sent by this user.
+     *
+     * @return ActiveQuery
      */
     public function getSentReviews(): ActiveQuery
     {
@@ -210,6 +250,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Gets reviews received by this user.
+     *
+     * @return ActiveQuery
      */
     public function getReceivedReviews(): ActiveQuery
     {
@@ -218,6 +260,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Gets tasks created by this user.
+     *
+     * @return ActiveQuery
      */
     public function getCustomerTasks(): ActiveQuery
     {
@@ -226,6 +270,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Gets tasks assigned to this user.
+     *
+     * @return ActiveQuery
      */
     public function getExecutorTasks(): ActiveQuery
     {
@@ -234,6 +280,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Gets tasks this user has bid on.
+     *
+     * @return ActiveQuery
      *
      * @throws InvalidConfigException
      */
@@ -247,6 +295,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Returns the user's age in full years, or null when the birthday is not set.
+     *
+     * @return ?int
      *
      * @throws \DateMalformedStringException If the birthday contains an invalid date.
      */

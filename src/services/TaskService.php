@@ -32,6 +32,10 @@ final class TaskService
 {
     /**
      * Creates the task service.
+     *
+     * @param FileStorage $fileStorage
+     * @param TaskRepository $taskRepository
+     * @param TaskWorkflow $taskWorkflow
      */
     public function __construct(
         private readonly FileStorage $fileStorage,
@@ -42,7 +46,11 @@ final class TaskService
     /**
      * Creates a task with files.
      *
+     * @param TaskCreateDto $dto
+     * @param int $customerId
      * @param list<UploadedFile> $files
+     *
+     * @return Task
      *
      * @throws FileException
      * @throws TaskCreateException
@@ -81,17 +89,13 @@ final class TaskService
 
             return $task;
         } catch (Throwable $exception) {
-            // Keep task creation atomic: if any attachment fails, roll back
-            // the database changes and remove all files already saved for the task.
+            // Roll back database changes and remove saved attachments.
             if ($transaction->isActive) {
                 $transaction->rollBack();
             }
 
             if ($attachmentDirectory !== null) {
-                $this->fileStorage->removeDirectory(
-                    StorageArea::TaskAttachments,
-                    $attachmentDirectory,
-                );
+                $this->fileStorage->removeDirectory(StorageArea::TaskAttachments, $attachmentDirectory);
             }
 
             if ($exception instanceof TaskCreateException) {
@@ -104,6 +108,13 @@ final class TaskService
 
     /**
      * Creates a bid.
+     *
+     * @param int $taskId
+     * @param User $user
+     * @param int $price
+     * @param ?string $comment
+     *
+     * @return int
      *
      * @throws EntityNotFoundException
      * @throws TaskActionException
@@ -129,6 +140,11 @@ final class TaskService
 
     /**
      * Accepts a bid.
+     *
+     * @param int $bidId
+     * @param User $user
+     *
+     * @return int
      *
      * @throws EntityNotFoundException
      * @throws TaskActionException
@@ -164,6 +180,11 @@ final class TaskService
     /**
      * Rejects a bid.
      *
+     * @param int $bidId
+     * @param User $user
+     *
+     * @return int
+     *
      * @throws EntityNotFoundException
      * @throws TaskActionException
      */
@@ -183,6 +204,13 @@ final class TaskService
 
     /**
      * Completes a task and saves a review.
+     *
+     * @param int $taskId
+     * @param User $user
+     * @param int $score
+     * @param string $comment
+     *
+     * @return int
      *
      * @throws EntityNotFoundException
      * @throws TaskActionException
@@ -213,6 +241,11 @@ final class TaskService
     /**
      * Marks a refused task as failed.
      *
+     * @param int $taskId
+     * @param User $user
+     *
+     * @return int
+     *
      * @throws EntityNotFoundException
      * @throws TaskActionException
      */
@@ -223,6 +256,11 @@ final class TaskService
 
     /**
      * Cancels a task.
+     *
+     * @param int $taskId
+     * @param User $user
+     *
+     * @return int
      *
      * @throws EntityNotFoundException
      * @throws TaskActionException
@@ -235,6 +273,9 @@ final class TaskService
     /**
      * Returns actions available to the user.
      *
+     * @param Task $task
+     * @param User $user
+     *
      * @return list<TaskAction>
      */
     public function getAvailableActions(Task $task, User $user): array
@@ -244,12 +285,18 @@ final class TaskService
                 $this->toTaskContext($task),
                 $this->toActorContext($user),
             ),
-            fn (TaskAction $action): bool => $this->passesPersistenceChecks($action, $task, $user),
+            fn(TaskAction $action): bool => $this->passesPersistenceChecks($action, $task, $user),
         ));
     }
 
     /**
      * Checks whether an action is available.
+     *
+     * @param TaskAction $action
+     * @param Task $task
+     * @param User $user
+     *
+     * @return bool
      */
     public function isActionAvailable(TaskAction $action, Task $task, User $user): bool
     {
@@ -263,7 +310,10 @@ final class TaskService
     /**
      * Saves task files.
      *
+     * @param Task $task
      * @param list<UploadedFile> $files
+     *
+     * @return void
      *
      * @throws FileException
      * @throws TaskCreateException
@@ -293,6 +343,12 @@ final class TaskService
     /**
      * Runs an action and saves the task.
      *
+     * @param int $taskId
+     * @param User $user
+     * @param TaskAction $action
+     *
+     * @return int
+     *
      * @throws EntityNotFoundException
      * @throws TaskActionException
      */
@@ -312,6 +368,12 @@ final class TaskService
     /**
      * Runs an action in the task workflow.
      *
+     * @param Task $task
+     * @param User $user
+     * @param TaskAction $action
+     *
+     * @return TaskContext
+     *
      * @throws TaskActionException
      */
     private function performAction(
@@ -328,6 +390,10 @@ final class TaskService
 
     /**
      * Creates task data for action checks.
+     *
+     * @param Task $task
+     *
+     * @return TaskContext
      */
     private function toTaskContext(Task $task): TaskContext
     {
@@ -340,6 +406,10 @@ final class TaskService
 
     /**
      * Creates user data for action checks.
+     *
+     * @param User $user
+     *
+     * @return ActorContext
      */
     private function toActorContext(User $user): ActorContext
     {
@@ -348,6 +418,11 @@ final class TaskService
 
     /**
      * Updates a task from an action result.
+     *
+     * @param Task $task
+     * @param TaskContext $taskContext
+     *
+     * @return void
      */
     private function applyTaskContext(Task $task, TaskContext $taskContext): void
     {
@@ -357,6 +432,12 @@ final class TaskService
 
     /**
      * Checks rules that use saved data.
+     *
+     * @param TaskAction $action
+     * @param Task $task
+     * @param User $user
+     *
+     * @return bool
      */
     private function passesPersistenceChecks(TaskAction $action, Task $task, User $user): bool
     {
@@ -370,6 +451,12 @@ final class TaskService
     /**
      * Checks that the action was not done before.
      *
+     * @param TaskAction $action
+     * @param Task $task
+     * @param User $user
+     *
+     * @return void
+     *
      * @throws TaskActionException
      */
     private function ensurePersistenceChecks(TaskAction $action, Task $task, User $user): void
@@ -381,6 +468,11 @@ final class TaskService
 
     /**
      * Checks that the bid belongs to an executor.
+     *
+     * @param Bid $bid
+     * @param Task $task
+     *
+     * @return void
      *
      * @throws TaskActionException
      */
@@ -396,6 +488,12 @@ final class TaskService
 
     /**
      * Checks whether the bid can be rejected.
+     *
+     * @param Bid $bid
+     * @param Task $task
+     * @param User $user
+     *
+     * @return void
      *
      * @throws TaskActionException
      */
@@ -415,6 +513,10 @@ final class TaskService
     /**
      * Finds a task by ID.
      *
+     * @param int $taskId
+     *
+     * @return Task
+     *
      * @throws EntityNotFoundException
      */
     private function findTask(int $taskId): Task
@@ -430,6 +532,10 @@ final class TaskService
 
     /**
      * Finds a bid by ID.
+     *
+     * @param int $bidId
+     *
+     * @return Bid
      *
      * @throws EntityNotFoundException
      */

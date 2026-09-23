@@ -15,6 +15,10 @@ final class AppFormatter extends Formatter
      * Formats a Russian phone number in the form "+7 (XXX) XXX-XX-XX".
      *
      * Returns the original value if it cannot be formatted.
+     *
+     * @param ?string $value
+     *
+     * @return string
      */
     public function asPhone(?string $value): string
     {

@@ -34,6 +34,14 @@ class TaskController extends AuthorizedController
 {
     /**
      * {@inheritdoc}
+     *
+     * @param mixed $id
+     * @param mixed $module
+     * @param TaskRepository $taskRepository
+     * @param CategoryRepository $categoryRepository
+     * @param TaskService $taskService
+     * @param FileStorage $fileStorage
+     * @param array $config
      */
     public function __construct(
         mixed $id,
@@ -49,6 +57,8 @@ class TaskController extends AuthorizedController
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function behaviors(): array
     {
@@ -70,6 +80,8 @@ class TaskController extends AuthorizedController
 
     /**
      * Displays the task list.
+     *
+     * @return string
      */
     public function actionIndex(): string
     {
@@ -101,6 +113,10 @@ class TaskController extends AuthorizedController
     /**
      * Displays a single task.
      *
+     * @param int $id
+     *
+     * @return string
+     *
      * @throws NotFoundHttpException
      */
     public function actionView(int $id): string
@@ -111,6 +127,10 @@ class TaskController extends AuthorizedController
     /**
      * Downloads a task attachment.
      * Any authenticated user can download an attachment due to AuthorizedController.
+     *
+     * @param int $id
+     *
+     * @return Response
      *
      * @throws NotFoundHttpException
      */
@@ -140,6 +160,8 @@ class TaskController extends AuthorizedController
 
     /**
      * Creates a new task and redirects to its details page.
+     *
+     * @return Response|string
      *
      * @throws ForbiddenHttpException
      * @throws TaskCreateException
@@ -178,6 +200,10 @@ class TaskController extends AuthorizedController
     /**
      * Accepts a bid and redirects to its task.
      *
+     * @param int $id
+     *
+     * @return Response
+     *
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
@@ -197,6 +223,10 @@ class TaskController extends AuthorizedController
     /**
      * Rejects a bid and redirects to its task.
      *
+     * @param int $id
+     *
+     * @return Response
+     *
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
@@ -215,6 +245,10 @@ class TaskController extends AuthorizedController
 
     /**
      * Creates a bid for a task.
+     *
+     * @param int $id
+     *
+     * @return Response|string
      *
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
@@ -260,6 +294,10 @@ class TaskController extends AuthorizedController
     /**
      * Completes a task and creates its review.
      *
+     * @param int $id
+     *
+     * @return Response|string
+     *
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
@@ -304,6 +342,10 @@ class TaskController extends AuthorizedController
     /**
      * Marks a task as failed after its executor refuses it.
      *
+     * @param int $id
+     *
+     * @return Response
+     *
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
      */
@@ -322,6 +364,10 @@ class TaskController extends AuthorizedController
 
     /**
      * Cancels a new task by its customer.
+     *
+     * @param int $id
+     *
+     * @return Response
      *
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
@@ -342,6 +388,10 @@ class TaskController extends AuthorizedController
     /**
      * Finds task details visible to the current user.
      *
+     * @param int $id
+     *
+     * @return Task
+     *
      * @throws NotFoundHttpException
      */
     private function findTaskDetails(int $id): Task
@@ -357,6 +407,13 @@ class TaskController extends AuthorizedController
 
     /**
      * Renders task details and its action forms.
+     *
+     * @param Task $task
+     * @param ?BidCreateForm $bidForm
+     * @param ?TaskCompleteForm $completeForm
+     * @param ?string $activeModal
+     *
+     * @return string
      */
     private function renderTaskDetails(
         Task $task,

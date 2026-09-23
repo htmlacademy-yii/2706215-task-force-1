@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace app\models;
 
 use Sanweb\Taskforce\enum\TaskStatus;
-use Sanweb\Taskforce\exception\MissingEnumLabelException;
 use yii\base\InvalidConfigException;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -42,6 +41,8 @@ class Task extends ActiveRecord
 {
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public static function tableName(): string
     {
@@ -50,6 +51,8 @@ class Task extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -77,6 +80,8 @@ class Task extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -101,6 +106,8 @@ class Task extends ActiveRecord
 
     /**
      * Returns the attachments associated with this task.
+     *
+     * @return ActiveQuery
      */
     public function getAttachments(): ActiveQuery
     {
@@ -109,6 +116,8 @@ class Task extends ActiveRecord
 
     /**
      * Returns the bids submitted for this task.
+     *
+     * @return ActiveQuery
      */
     public function getBids(): ActiveQuery
     {
@@ -117,6 +126,8 @@ class Task extends ActiveRecord
 
     /**
      * Returns the category of this task.
+     *
+     * @return ActiveQuery
      */
     public function getCategory(): ActiveQuery
     {
@@ -125,6 +136,8 @@ class Task extends ActiveRecord
 
     /**
      * Returns the city associated with this task.
+     *
+     * @return ActiveQuery
      */
     public function getCity(): ActiveQuery
     {
@@ -133,6 +146,8 @@ class Task extends ActiveRecord
 
     /**
      * Returns the customer who created this task.
+     *
+     * @return ActiveQuery
      */
     public function getCustomer(): ActiveQuery
     {
@@ -141,6 +156,8 @@ class Task extends ActiveRecord
 
     /**
      * Returns the executor assigned to this task.
+     *
+     * @return ActiveQuery
      */
     public function getExecutor(): ActiveQuery
     {
@@ -149,6 +166,8 @@ class Task extends ActiveRecord
 
     /**
      * Returns the review associated with this task.
+     *
+     * @return ActiveQuery
      */
     public function getReview(): ActiveQuery
     {
@@ -157,6 +176,8 @@ class Task extends ActiveRecord
 
     /**
      * Returns the users who submitted bids for this task.
+     *
+     * @return ActiveQuery
      *
      * @throws InvalidConfigException
      */
@@ -169,7 +190,9 @@ class Task extends ActiveRecord
     }
 
     /**
-     * @throws MissingEnumLabelException
+     * Returns the localized task status label.
+     *
+     * @return string
      */
     public function getStatusLabel(): string
     {

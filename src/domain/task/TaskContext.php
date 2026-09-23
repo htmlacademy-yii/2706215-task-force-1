@@ -15,6 +15,10 @@ final readonly class TaskContext
     /**
      * Creates a task context.
      *
+     * @param TaskStatus $status
+     * @param int $customerId
+     * @param ?int $executorId
+     *
      * @throws InvalidArgumentException
      */
     public function __construct(
@@ -39,6 +43,10 @@ final readonly class TaskContext
 
     /**
      * Returns a copy with the specified status.
+     *
+     * @param TaskStatus $status
+     *
+     * @return self
      */
     public function withStatus(TaskStatus $status): self
     {
@@ -51,6 +59,10 @@ final readonly class TaskContext
 
     /**
      * Returns a copy with the specified executor.
+     *
+     * @param int $executorId
+     *
+     * @return self
      */
     public function withExecutor(int $executorId): self
     {
@@ -63,6 +75,8 @@ final readonly class TaskContext
 
     /**
      * Returns the current task status.
+     *
+     * @return TaskStatus
      */
     public function getStatus(): TaskStatus
     {
@@ -71,6 +85,8 @@ final readonly class TaskContext
 
     /**
      * Returns the customer identifier.
+     *
+     * @return int
      */
     public function getCustomerId(): int
     {
@@ -79,6 +95,8 @@ final readonly class TaskContext
 
     /**
      * Returns the assigned executor identifier, if any.
+     *
+     * @return ?int
      */
     public function getExecutorId(): ?int
     {

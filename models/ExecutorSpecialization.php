@@ -22,6 +22,8 @@ class ExecutorSpecialization extends ActiveRecord
 {
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public static function tableName(): string
     {
@@ -30,6 +32,8 @@ class ExecutorSpecialization extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -44,6 +48,8 @@ class ExecutorSpecialization extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -57,6 +63,8 @@ class ExecutorSpecialization extends ActiveRecord
 
     /**
      * Returns the specialization category.
+     *
+     * @return ActiveQuery
      */
     public function getCategory(): ActiveQuery
     {
@@ -65,6 +73,8 @@ class ExecutorSpecialization extends ActiveRecord
 
     /**
      * Returns the executor associated with this specialization.
+     *
+     * @return ActiveQuery
      */
     public function getUser(): ActiveQuery
     {

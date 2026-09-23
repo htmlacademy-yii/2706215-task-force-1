@@ -17,6 +17,7 @@ use yii\db\ActiveRecord;
  * @property string|null $telegram
  * @property string|null $about
  * @property int $hide_my_contacts
+ * @property string $status
  * @property string $created_at
  * @property string|null $updated_at
  *
@@ -30,6 +31,8 @@ class ExecutorProfile extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return string
      */
     public static function tableName(): string
     {
@@ -38,6 +41,8 @@ class ExecutorProfile extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -69,6 +74,8 @@ class ExecutorProfile extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function attributeLabels(): array
     {
@@ -86,6 +93,8 @@ class ExecutorProfile extends ActiveRecord
 
     /**
      * Returns the executor who owns this profile.
+     *
+     * @return ActiveQuery
      */
     public function getUser(): ActiveQuery
     {
@@ -94,6 +103,8 @@ class ExecutorProfile extends ActiveRecord
 
     /**
      * Returns the executor status label.
+     *
+     * @return string
      */
     public function getStatusLabel(): string
     {
